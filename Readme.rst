@@ -52,7 +52,12 @@ Roadmap
 =======
 
 1. Get the basics working
-2. Add other features
+    1. Implement Decorator commands (for non-complex commands)
+    2. Implement Subclasses commands (for more complex commands- better control)
+    3. Add support for tab completion
+    4. Create documentation
+    5. Create unittests
+2. Add other "nice" features
     1. Colors
     2. ProgressBar
     3. Execute in thread
