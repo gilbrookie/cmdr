@@ -27,7 +27,6 @@ class Application(object):
         if not exit_msg:
             self.exit_msg = DEFAULT_EXIT
         
-        self.options = ???
         self.current_candidates = []
 
 
@@ -71,18 +70,30 @@ class Application(object):
 
 
     def register_cmd(self, **options):
+        """
         cmd_name = options.get('name')
         exec_func = options.get('exec_func')
         help = options.get('help')
         argspec = options.get('argspec')
+        """
 
         self.registered_cmds.append(options)
 
-        cmd_list = cmd_name.split()
-        
-        if not self.completion_dict.has_key(cmd_list[0]):
-            self.completion_dict[cmd_list['0']]
-        
+    def register_cmd2(self, cmd):
+
+        if issubclass(cmd, command.Command):
+            
+            if self.registered_cmds.has_key(cmd):
+                self.merge_command(cmd)
+            else:
+                c = cmd()
+                self.registered_cmds[c.cmd_dict]
+
+
+    def merge_command(self, cmd):
+        pass
+
+
     def cmd(self, cmd_name, alt=None):
         print "Decorator called"
         def decorator(f):
@@ -146,9 +157,20 @@ class Application(object):
         return response
 """
 registered_cmds
-{   name:"",
-    help:"",
-    exec_func:""}
+
+
+{cmd: { help:"",
+        alt:"",
+        subcmds:[],
+        validate_func:
+        exec_func:
+        completion_dict:{}
+        }
+}
+
+        
+
+
 
 complete_dict = {key1:[{subkey1, args},
                        {subkey2, args}],
