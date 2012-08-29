@@ -2,6 +2,7 @@ import inspect
 from pprint import pprint as pp
 import readline
 import logging
+from aclip2 import command
 
 logging.basicConfig(filename='/tmp/aclip2.log', level=logging.DEBUG)
 
@@ -18,7 +19,7 @@ class Application(object):
         else:
             self.registered_cmds = []
 
-        self.completion_dict = {}
+        self.complete_dict = {}
         self.exit_condition = False
 
         if not intro_msg:
@@ -42,7 +43,7 @@ class Application(object):
         readline.parse_and_bind("tab: complete")
 
         while not self.exit_condition:
-            pp(self.registered_cmds)
+            pp(self.complete_dict)
             try:
                 cmd = raw_input(self.prompt)
                 self.exec_cmd(cmd)
@@ -54,16 +55,23 @@ class Application(object):
                 print ex
 
             except TypeError, ex:
-                print ex
+                print "TypeError:%s" % ex
+
+            except Exception, ex:
+                print "CAUGHT: %s" % ex
 
         readline.set_completer(self.rl_completer)
 
         print self.exit_msg
 
     def exec_cmd(self, cmd):
+        print cmd
+
+        cmdparts = cmd.split()
         for c in self.registered_cmds:
-            if c['name'] == cmd:
-                c['exec_func']()
+            if cmd in c.cmd_strs:
+                print c
+                c.execute(cmd)
                 break
         else:
             raise CommandNotFound("Command not found: %s" % cmd)
@@ -81,17 +89,18 @@ class Application(object):
 
     def register_cmd2(self, cmd):
 
-        if issubclass(cmd, command.Command):
+
+        print type(cmd)
+        # Check if cmd has actually a Command Class
+        if isinstance(cmd, command.Command):
+            # if not already instatiated, do that.
+
+            self.registered_cmds.append(cmd)
             
-            if self.registered_cmds.has_key(cmd):
-                self.merge_command(cmd)
-            else:
-                c = cmd()
-                self.registered_cmds[c.cmd_dict]
+            self.complete_dict[cmd.cmd] = [c for c in cmd.subcmds]
 
-
-    def merge_command(self, cmd):
-        pass
+        else:
+            print "expecting a Command object"
 
 
     def cmd(self, cmd_name, alt=None):
@@ -107,32 +116,33 @@ class Application(object):
             print cmd['name']
 
     def complete_cmd(self, text, state):
-        logging.debug('state=%s', state)
+        logging.debug('STATE=%s', state)
+
+        origline = readline.get_line_buffer()
+        begin = readline.get_begidx()
+        end = readline.get_endidx()
+        being_completed = origline[begin:end]
+        words = origline.split()
+
+        logging.debug('origline=%s', repr(origline))
+        logging.debug('begin=%s', begin)
+        logging.debug('end=%s', end)
+        logging.debug('being_completed=%s', being_completed)
+        logging.debug('words=%s', words)
+
         if state == 0:
 
-            origline = readline.get_line_buffer()
-            begin = readline.get_begidx()
-            end = readline.get_endidx()
-            being_completed = origline[begin:end]
-            words = origline.split()
-
-            logging.debug('origline=%s', repr(origline))
-            logging.debug('begin=%s', begin)
-            logging.debug('end=%s', end)
-            logging.debug('being_completed=%s', being_completed)
-            logging.debug('words=%s', words)
-
             if not words:
-                self.current_candidates = sorted(self.options.keys())
+                self.current_candidates = sorted(self.complete_dict.keys())
             else:
                 try:
                     if begin == 0:
                         # first word
-                        candidates = self.options.keys()
+                        candidates = self.complete_dict.keys()
                     else:
                         # later word
                         first = words[0]
-                        candidates = self.options[first]
+                        candidates = self.complete_dict[first]
                     
                     if being_completed:
                         # match options with portion of input
@@ -151,7 +161,7 @@ class Application(object):
         
         try:
             response = self.current_candidates[state]
-        except IndexError:
+        except IndexError, e:
             response = None
         logging.debug('complete(%s, %s) => %s', repr(text), state, response)
         return response

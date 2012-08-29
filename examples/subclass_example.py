@@ -1,9 +1,8 @@
 
 from datetime import datetime
 from aclip2 import application 
-from aclip2.command import Command
+from aclip2.command import Command, subcmd
 from pprint import pprint as pp
-
 
 class Blog(Command):
     """Blog command"""
@@ -11,22 +10,46 @@ class Blog(Command):
     def __init__(self):
         super(Blog, self).__init__()
 
-    def cmd_str(self):
-        if not self.sub_cmds:
-            return self.cmd
-
-        else:
-            [" ".join([self.cmd, sc[0]]) for sc in self.sub_cmds]
-            
-
+    @subcmd
     def add(self):
         print "Blog Add subcmd"
 
+    @subcmd
     def edit(self, id=None):
         print "Blog Edit subcmd"
+
+class Project(Command):
+    """Project command"""
+
+    @subcmd
+    def add(self):
+        """Adds a new project entry"""
+        print "Project Added"
+
+    @subcmd
+    def edit(self):
+        """Edits a project entry"""
+        print "Project Edited"
+
+class LoadTest(Command):
+    
+    def execute(self):
+        print "Execute LoadTest"
 
 
 app = application.Application("blog_cli")
 
 b = Blog()
-pp(b.cmd_dict)
+p = Project()
+
+
+print ""
+
+#pp(b.cmd_dict)
+
+app.register_cmd2(b)
+app.register_cmd2(p)
+
+app.start()
+
+

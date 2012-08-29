@@ -1,6 +1,29 @@
 """
 """
+from functools import wraps
 
+class CmdMetaclass(type):
+    def __new__(cls, name, bases, attrs):
+
+        new_cls = super(CmdMetaclass, cls).__new__(cls, name, bases, attrs)
+
+        subcmds = {}
+        for key in attrs:
+            print key
+
+            attr = getattr(new_cls, key)
+            try: 
+                if hasattr(attr,"is_subcmd"):
+                    print "SUBCMD: %s" % key
+
+                    subcmds[key] = {'help': attr.__doc__, 'exec_func': attr }
+
+            except AttributeError:
+                continue
+   
+        setattr(new_cls, "subcmds", subcmds)
+
+        return new_cls
 
 class Command(object):
     """
@@ -13,8 +36,14 @@ class Command(object):
     * execution_func - callback
     * arg_spec
     """
+
+    __metaclass__ = CmdMetaclass
+
     def __init__(self, cmd=None, alt=None, sub_cmd_set=None, description=None, 
                     valid_func=None, exec_func=None, arg_spec=None):
+
+        print "__init__ %s" % self.__class__.__name__
+
         self.cmd = cmd
         if not cmd:
             self.cmd = self.__class__.__name__.lower()
@@ -41,22 +70,24 @@ class Command(object):
 
         self.alt = alt
         self.completion_dict = None
-        self.subcmds = {}
+        #self.subcmds = self.__dict__['subcmds']
 
     @property
     def cmd_dict(self):
-        return {self.cmd : { 'help'     : self.description, 
-                             'alt'      : self.alt, 
-                             'valid_func': self.valid_func,
-                             'exec_func': self.exec_func,
-                             'comp_dict': self.completion_dict,
-                             'sub_cmds' : self.subcmds } }
+        return { self.cmd:{ 'help'     : self.description, 
+                            'alt'      : self.alt, 
+                            'valid_func': self.valid_func,
+                            'exec_func': self.exec_func,
+                            'comp_dict': self.completion_dict,
+                            'subcmds' : self.subcmds } }
 
-    def subcmd(self):
-        def decorator(f):
-            print "detected subcmd"
-            self.subcmd[f.name] = {'help':f.__doc__, 'exec_func': f}
-        return decorator
+    @property
+    def cmd_strs(self):
+        if not self.subcmds:
+            return [self.cmd]
+
+        else:
+            return [" ".join([self.cmd, sc]) for sc in self.subcmds.keys()]
 
     def validate(self):
         """Validates the commands arguments"""
@@ -79,3 +110,8 @@ class Command(object):
     
 
         return True
+
+
+def subcmd(f):
+    f.is_subcmd = True
+    return f
