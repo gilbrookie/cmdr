@@ -1,3 +1,13 @@
+# -*- coding: utf-8 -*-
+
+"""
+aclip2.application
+~~~~~~~~~~~~~~~~~~
+
+This module implements the main Application class and supported functions.
+"""
+
+
 import inspect
 from pprint import pprint as pp
 import readline
@@ -10,6 +20,33 @@ DEFAULT_WELCOME = u"""\nACLIP2 Command line framework\nLet's get started!\n"""
 DEFAULT_EXIT = u"""\nBye!"""
 
 class Application(object):
+    """
+    The Application object implements the main CLI interpreter and acts as the
+    primary entry point for applications.
+
+    It is passed the name of the application as it's only required argument.
+    Optionally, a list of Command objects may be passed in, as well you can override
+    the intro and exit messages.
+
+    The Application class keeps track of the available commands through a
+    registration system.  Users of the Application class can provide the commands at
+    creation time or using the :meth:`register_cmd` method to register and make
+    custom command available in the application.
+
+    The Application provides two built-in commands; exit and help.
+
+    For the commands that are registered, the application will try to provide basic
+    tab completion and maintains a history of previously entered commands.
+
+    :param: app_name: the name of the application
+    :param: registered_commands: can be used to set the list of registered commands
+                                 as creation time.  Defaults to None.
+    :param: intro_msg: the introduction message printed by the Application class
+    :param: exit_msg: the exit message printed by the Application class when the it
+                        is terminated.
+
+
+    """
     def __init__(self, app_name, registered_commands=None, intro_msg=None, exit_msg=None):
         self.prompt = "-> "
         self.app_name = app_name
@@ -32,7 +69,8 @@ class Application(object):
 
 
     def start(self):
-        """Runs the command loop"""
+        """Instructs the Application class to start the command line interreter.  All
+        commands must be registered with the application prior to calling start."""
         # Show prompts,wait for input
         # Validate command
         # loop until termination command issued (exit, CTRL+C)
@@ -64,7 +102,7 @@ class Application(object):
 
         print self.exit_msg
 
-    def exec_cmd(self, cmd):
+    def _exec_cmd(self, cmd):
         print cmd
 
         cmdparts = cmd.split()
@@ -104,18 +142,42 @@ class Application(object):
 
 
     def cmd(self, cmd_name, alt=None):
-        print "Decorator called"
+        print "A function decorator that registers the function as a command within
+        the application.
+        
+        :param cmd_name: the name of the command (it is how the command will appear
+                         within the application
+        :param alt: an alternate name for the command - usually a shortcut that the
+                    application can register.
+
+        *Usage:*
+
+        # Instantiate an app
+        app = aclip2.Application(__name__)
+
+        # register a command using the decorator
+        @app.cmd(echo):
+        def echo(msg):
+            print msg
+
+        # start the app
+        app.start()
+
+        ->echo Hello World!
+        Hello World!
+
+        "
         def decorator(f):
             self.register_cmd(name=cmd_name, help=f.__doc__, exec_func=f, )
             if alt:
                 self.register_cmd(name=alt, help=f.__doc__, exec_func=f)
         return decorator
 
-    def show_cmds(self):
+    def _show_cmds(self):
         for cmd in self.registered_cmds:
             print cmd['name']
 
-    def complete_cmd(self, text, state):
+    def _complete_cmd(self, text, state):
         logging.debug('STATE=%s', state)
 
         origline = readline.get_line_buffer()
@@ -165,29 +227,6 @@ class Application(object):
             response = None
         logging.debug('complete(%s, %s) => %s', repr(text), state, response)
         return response
-"""
-registered_cmds
-
-
-{cmd: { help:"",
-        alt:"",
-        subcmds:[],
-        validate_func:
-        exec_func:
-        completion_dict:{}
-        }
-}
-
-        
-
-
-
-complete_dict = {key1:[{subkey1, args},
-                       {subkey2, args}],
-                 key2:[subkey1,
-                       subkey2]...}
-
-"""
 
 class CommandNotFound(Exception):
     pass
