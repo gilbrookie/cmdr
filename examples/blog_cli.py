@@ -1,9 +1,9 @@
 
 from datetime import datetime
 
-from aclip2 import application
+from aclip2 import Application
 
-app = application.Application("blog_cli")
+app = Application("blog_cli")
 
 @app.cmd("blog add")    # Full command
 def add_blog():
@@ -19,10 +19,8 @@ def add_blog():
     print datetime.now()
 
 
-@app.cmd("blog edit <id>")
+@app.cmd("blog edit")
 def edit_blog(id):
     print "editing blog id %s" % id
-
-
 
 app.start()

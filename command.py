@@ -21,8 +21,6 @@ class CmdMetaclass(type):
         # the @subcmd decorator.
 
         for key in attrs:
-            print key
-
             attr = getattr(new_cls, key)
             try: 
                 if hasattr(attr,"is_subcmd"):
@@ -83,6 +81,15 @@ class Command(object):
         self.cmd = cmd
         if not cmd:
             self.cmd = self.__class__.__name__.lower()
+
+        # if the cmd can be split into two or more words (has a space in it) we take
+        # the first part as the primary command and the second part as a subcommand
+
+        # **NOTE: currently only supports one level of sub command
+        parts = cmd.split()
+        if parts > 1:
+            self.cmd = parts[0]
+            self.subcmds[parts[1]] = {'help':description, 'exec_func':exec_func}
     
         self.description = description
         if not description:

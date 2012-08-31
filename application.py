@@ -7,12 +7,12 @@ aclip2.application
 This module implements the main Application class and supported functions.
 """
 
-
 import inspect
 from pprint import pprint as pp
 import readline
 import logging
-from aclip2 import command
+
+from aclip2 import Command
 
 logging.basicConfig(filename='/tmp/aclip2.log', level=logging.DEBUG)
 
@@ -47,12 +47,19 @@ class Application(object):
 
 
     """
-    def __init__(self, app_name, registered_commands=None, intro_msg=None, exit_msg=None):
+    def __init__(self, app_name, registered_commands=None, intro_msg=None,
+            exit_msg=None, prompt_str=None):
+
+        # The default prompt string
         self.prompt = "-> "
+        if prompt_str:
+            self.prompt= prompt_str
+
         self.app_name = app_name
 
         if registered_commands:
-            self.registered_cmds = registered_commands
+            for cmd in registered_commands:
+                self.register_cmd(cmd)
         else:
             self.registered_cmds = []
 
@@ -71,35 +78,53 @@ class Application(object):
     def start(self):
         """Instructs the Application class to start the command line interreter.  All
         commands must be registered with the application prior to calling start."""
-        # Show prompts,wait for input
-        # Validate command
-        # loop until termination command issued (exit, CTRL+C)
+        
+        
+        # Show the welcome message up front.        
         print self.welcome_msg
-
+       
+        # set up the command completion code - so we can do "TAB" completion.
         self.rl_completer = readline.get_completer()
-        readline.set_completer(self.complete_cmd)
+
+        # Configure the function that perform the command lookup (thus completion)
+        readline.set_completer(self._complete_cmd)
         readline.parse_and_bind("tab: complete")
 
+
+        # The main loop uses an flag to determine when it needs to exit. 
+        # Run until the flag is set.
+
         while not self.exit_condition:
-            pp(self.complete_dict)
-            try:
+            #pp(self.complete_dict)
+            
+            try:              
+                # read in the text input from cli
                 cmd = raw_input(self.prompt)
-                self.exec_cmd(cmd)
-                                
+
+                # then, execute
+                self._exec_cmd(cmd)
+                               
+            # Catch keyboard shortcuts to kill the app (CTRL+C, CRTL+Z)
             except (KeyboardInterrupt, EOFError):
                 self.exit_condition = True
 
+            # Catch cases where an invalid command was entered
             except CommandNotFound, ex:
                 print ex
 
+            # Some debugging exceptions (TODO: Remove once intial dev work complete)
             except TypeError, ex:
                 print "TypeError:%s" % ex
 
+            # blanket execption catch-all - so we can print an approptiate message
+            # without killing the running process.
             except Exception, ex:
                 print "CAUGHT: %s" % ex
 
+        # restore the previous completer function when we're done.
         readline.set_completer(self.rl_completer)
 
+        # Show the exit message
         print self.exit_msg
 
     def _exec_cmd(self, cmd):
@@ -114,27 +139,15 @@ class Application(object):
         else:
             raise CommandNotFound("Command not found: %s" % cmd)
 
-
-    def register_cmd(self, **options):
+    def register_cmd(self, cmd):
         """
-        cmd_name = options.get('name')
-        exec_func = options.get('exec_func')
-        help = options.get('help')
-        argspec = options.get('argspec')
+        This method registers the provided command with the Application.  The command
+        must be an instance if the Command class to be valid.
         """
-
-        self.registered_cmds.append(options)
-
-    def register_cmd2(self, cmd):
-
-
-        print type(cmd)
         # Check if cmd has actually a Command Class
-        if isinstance(cmd, command.Command):
-            # if not already instatiated, do that.
+        if isinstance(cmd, Command):
 
             self.registered_cmds.append(cmd)
-            
             self.complete_dict[cmd.cmd] = [c for c in cmd.subcmds]
 
         else:
@@ -142,7 +155,7 @@ class Application(object):
 
 
     def cmd(self, cmd_name, alt=None):
-        print "A function decorator that registers the function as a command within
+        """A function decorator that registers the function as a command within
         the application.
         
         :param cmd_name: the name of the command (it is how the command will appear
@@ -166,11 +179,17 @@ class Application(object):
         ->echo Hello World!
         Hello World!
 
-        "
+        """
+
         def decorator(f):
-            self.register_cmd(name=cmd_name, help=f.__doc__, exec_func=f, )
+            # Create a new Command object and register it.
+            c = Command(cmd=cmd_name, description=f.__doc__, exec_func=f)
+            self.register_cmd(c)
             if alt:
-                self.register_cmd(name=alt, help=f.__doc__, exec_func=f)
+                # Create a separate Command for the alternate.
+                a = Command(cmd=alt, description=f.__doc__, exec_func=f)
+                self.register_cmd(a)
+
         return decorator
 
     def _show_cmds(self):
@@ -228,5 +247,13 @@ class Application(object):
         logging.debug('complete(%s, %s) => %s', repr(text), state, response)
         return response
 
+
+
 class CommandNotFound(Exception):
+    """Raised when an unregistered command is entered"""
+    pass
+
+class InvalidCommandType(Exception):
+    """Raised when attempting to register a command that is not an instance of the
+    Command class."""
     pass
