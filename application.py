@@ -16,9 +16,6 @@ from aclip2 import Command
 
 logging.basicConfig(filename='/tmp/aclip2.log', level=logging.DEBUG)
 
-DEFAULT_WELCOME = u"""\nACLIP2 Command line framework\nLet's get started!\n"""
-DEFAULT_EXIT = u"""\nBye!"""
-
 class Application(object):
     """
     The Application object implements the main CLI interpreter and acts as the
@@ -47,6 +44,10 @@ class Application(object):
 
 
     """
+    
+    DEFAULT_WELCOME = u"""\nACLIP2 Command line framework\nLet's get started!\n"""
+    DEFAULT_EXIT = u"""\nBye!"""
+
     def __init__(self, app_name, registered_commands=None, intro_msg=None,
             exit_msg=None, prompt_str=None):
 
@@ -67,10 +68,10 @@ class Application(object):
         self.exit_condition = False
 
         if not intro_msg:
-            self.welcome_msg = DEFAULT_WELCOME
+            self.welcome_msg = self.DEFAULT_WELCOME
 
         if not exit_msg:
-            self.exit_msg = DEFAULT_EXIT
+            self.exit_msg = self.DEFAULT_EXIT
         
         self.current_candidates = []
 
