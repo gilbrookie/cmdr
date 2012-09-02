@@ -59,13 +59,14 @@ class Application(object):
 
         self.app_name = app_name
 
+        self.complete_dict = {}
+        
+        self.registered_cmds =[]
         if registered_commands:
+            # we need to process each command through the registration function
             for cmd in registered_commands:
                 self.register_cmd(cmd)
-        else:
-            self.registered_cmds = []
 
-        self.complete_dict = {}
         self.exit_condition = False
 
         if not intro_msg:
@@ -120,8 +121,8 @@ class Application(object):
 
             # blanket execption catch-all - so we can print an approptiate message
             # without killing the running process.
-            except Exception, ex:
-                print "CAUGHT: %s" % ex
+            #except Exception, ex:
+            #    print "CAUGHT: %s" % ex
 
         # restore the previous completer function when we're done.
         readline.set_completer(self.rl_completer)
@@ -132,14 +133,53 @@ class Application(object):
     def _exec_cmd(self, cmd):
         print cmd
 
-        cmdparts = cmd.split()
-        for c in self.registered_cmds:
-            if cmd in c.cmd_strs:
-                print c
-                c.execute(cmd)
-                break
+        (fn, args) = self._lookup_cmd(cmd.split())
+        if fn:
+            print fn(args)
         else:
             raise CommandNotFound("Command not found: %s" % cmd)
+
+    def _lookup_cmd(self, key_list):
+
+        # track the function to be executed
+        ex_fn = None
+        args = None
+
+        print key_list, len(key_list)
+
+        key_len = len(key_list)
+
+        for cmd in self.registered_cmds:
+            # lookup the primary command name
+            if key_list[0] == cmd.name:
+                print "found top cmd %s" % cmd.name
+
+                top_cmd = key_list.pop(0)
+                try:
+                    # if we match, try to match subcmds
+                    if key_list[0] in cmd.subcmds:
+                        # we found a subcmd
+                        subcmd = key_list.pop(0)
+                        meth = cmd.subcmds[subcmd]['exec_func']
+                        
+                        print cmd.__class__.__name__
+                        print meth.name
+                        
+                        ex_fn = eval("%s.%s", % (cmd, meth.name)) 
+                        args = key_list
+                    else:
+                        ex_fn = cmd.exec_func
+                        args = key_list.pop(0)
+                except IndexError:
+                    # if no match is found
+                    ex_fn = cmd.exec_func   
+
+                break
+
+            else:
+                continue
+
+        return (ex_fn, args)
 
     def register_cmd(self, cmd):
         """
@@ -150,7 +190,7 @@ class Application(object):
         if isinstance(cmd, Command):
 
             self.registered_cmds.append(cmd)
-            self.complete_dict[cmd.cmd] = [c for c in cmd.subcmds]
+            self.complete_dict[cmd.name] = [c for c in cmd.subcmds]
 
         else:
             print "expecting a Command object"

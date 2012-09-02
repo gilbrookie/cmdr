@@ -79,19 +79,21 @@ class Command(object):
 
         self.logger = logging.getLogger(self.__class__.__name__)
         
-        self.cmd = cmd
-        if not cmd:
-            self.cmd = self.__class__.__name__.lower()
-
         # if the cmd can be split into two or more words (has a space in it) we take
         # the first part as the primary command and the second part as a subcommand
 
         # **NOTE: currently only supports one level of sub command
-        parts = cmd.split()
-        if parts > 1:
-            self.cmd = parts[0]
-            self.subcmds[parts[1]] = {'help':description, 'exec_func':exec_func}
-    
+
+        if cmd:
+            parts = cmd.split()
+            if len(parts) > 1:
+                self.name = parts[0]
+                self.subcmds[parts[1]] = {'help':description, 'exec_func':exec_func}
+            else:
+                self.name = cmd
+        else:
+            self.name = self.__class__.__name__.lower()
+
         self.description = description
         if not description:
             self.description = self.__doc__
@@ -110,7 +112,7 @@ class Command(object):
     @property
     def cmd_dict(self):
         """Returns a dictionary representation of the command"""
-        return { self.cmd:{ 'help'     : self.description, 
+        return { self.name: { 'help'     : self.description, 
                             'alt'      : self.alt, 
                             'valid_func': self.valid_func,
                             'exec_func': self.exec_func,
@@ -121,10 +123,11 @@ class Command(object):
     def cmd_strs(self):
         """Returns a list of complete commands (including subcommands)"""
         if not self.subcmds:
-            return [self.cmd]
+            return [self.name]
 
         else:
-            return [" ".join([self.cmd, sc]) for sc in self.subcmds.keys()]
+            return [" ".join([self.name, sc]) for sc in self.subcmds.keys()]
+
 
     def validate(self):
         """Validates the commands arguments"""
@@ -142,15 +145,10 @@ class Command(object):
         method to assure that the arguments are correct.
 
         """
-        self.logger.info("'%s' execute()" % self.cmd)
+        self.logger.info("'%s' execute()" % self.name)
 
-        if self.subcmds:
-            for k, v in self.subcmds.iteritems():
-                if line == k:
-                    f = getattr(self, k)
-                    f(v)
-
-        return True
+        #print "No action to perform for %s" % cmd
+        print "No action to perform"
 
 
 def subcmd(f):
