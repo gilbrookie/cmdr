@@ -6,7 +6,7 @@ This module sets up the main interface for the public API.
 """
 
 __title__ = "aclip2"
-__version__ = "0.0.1"
+__version__ = "0.0.2"
 __author__ = "James Gilbrook"
 __licence__ = "ISC"
 __copyright__ = "Copyright 2012 James Gilbrook"
