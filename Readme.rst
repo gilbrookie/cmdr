@@ -17,39 +17,37 @@ Usage
 Designing Commands
 ------------------
 :: 
+    # Build a command directly
+    cmd = Command(name="cmd", desc="Sample", exec_func=exec_call_back)
 
-# Build a command directly
-cmd = Command(name="cmd", desc="Sample", exec_func=exec_call_back)
+::
+    # Subclass
+    class Cmd(Command):
+        def __init__(self):
+            self.name = "cmd"
+            self.desc = "Sample"
+
+        def execute(self):
+            print do something
+            return True
 
 ::
 
-# Subclass
-class Cmd(Command):
-    def __init__(self):
-        self.name = "cmd"
-        self.desc = "Sample"
-
-    def execute(self):
-        print do something
-        return True
-
-::
-
-# Using function Decorator 
-@aclip.cmd
-def cmd(args):
-    """description: Sample"
+    # Using function Decorator 
+    @aclip.cmd
+    def cmd(args):
+        """description: Sample"
 
 Building the CLI application
 -----------------------------
 ::
 
-# Instatiate an Application object
-app = aclip2.Application()
-# Pass in the commands that are available
-app.register_commands([cmd])
-# Start the app
-app.start()
+    # Instatiate an Application object
+    app = aclip2.Application()
+    # Pass in the commands that are available
+    app.register_commands([cmd])
+    # Start the app
+    app.start()
 
 # note "exit" and "help" are builtin comands
 
