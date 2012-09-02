@@ -6,6 +6,7 @@ This module implements the base Command class.  This class defines the functiona
 required the register commands with the Application and allow them to be executed.
 """
 from functools import wraps
+import logging
 
 class CmdMetaclass(type):
     def __new__(cls, name, bases, attrs):
@@ -76,8 +77,8 @@ class Command(object):
     def __init__(self, cmd=None, alt=None, sub_cmd_set=None, description=None, 
                     valid_func=None, exec_func=None, arg_spec=None):
 
-        print "__init__ %s" % self.__class__.__name__
-
+        self.logger = logging.getLogger(self.__class__.__name__)
+        
         self.cmd = cmd
         if not cmd:
             self.cmd = self.__class__.__name__.lower()
@@ -141,7 +142,7 @@ class Command(object):
         method to assure that the arguments are correct.
 
         """
-        print "Execute"
+        self.logger.info("'%s' execute()" % self.cmd)
 
         if self.subcmds:
             for k, v in self.subcmds.iteritems():

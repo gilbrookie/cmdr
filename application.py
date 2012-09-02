@@ -7,14 +7,14 @@ aclip2.application
 This module implements the main Application class and supported functions.
 """
 
-import inspect
 from pprint import pprint as pp
 import readline
 import logging
 
 from aclip2 import Command
 
-logging.basicConfig(filename='/tmp/aclip2.log', level=logging.DEBUG)
+logging.basicConfig(filename='/tmp/aclip2.log', level=logging.DEBUG, 
+                    format='%(asctime)s [%(levelname)s] %(module)s - %(message)s')
 
 class Application(object):
     """
@@ -50,7 +50,8 @@ class Application(object):
 
     def __init__(self, app_name, registered_commands=None, intro_msg=None,
             exit_msg=None, prompt_str=None):
-
+        
+        self.logger = logging.getLogger(self.__class__.__name__)
         # The default prompt string
         self.prompt = "-> "
         if prompt_str:
@@ -183,6 +184,7 @@ class Application(object):
         """
 
         def decorator(f):
+            self.logger.info("Registering new command '%s', func=%s" % (cmd_name, f))
             # Create a new Command object and register it.
             c = Command(cmd=cmd_name, description=f.__doc__, exec_func=f)
             self.register_cmd(c)
@@ -198,7 +200,7 @@ class Application(object):
             print cmd['name']
 
     def _complete_cmd(self, text, state):
-        logging.debug('STATE=%s', state)
+        self.logger.debug('STATE=%s', state)
 
         origline = readline.get_line_buffer()
         begin = readline.get_begidx()
@@ -206,11 +208,11 @@ class Application(object):
         being_completed = origline[begin:end]
         words = origline.split()
 
-        logging.debug('origline=%s', repr(origline))
-        logging.debug('begin=%s', begin)
-        logging.debug('end=%s', end)
-        logging.debug('being_completed=%s', being_completed)
-        logging.debug('words=%s', words)
+        self.logger.debug('origline=%s', repr(origline))
+        self.logger.debug('begin=%s', begin)
+        self.logger.debug('end=%s', end)
+        self.logger.debug('being_completed=%s', being_completed)
+        self.logger.debug('words=%s', words)
 
         if state == 0:
 
@@ -235,17 +237,17 @@ class Application(object):
                         # matching empty string so use all candidates
                         self.current_candidates = candidates
 
-                    logging.debug('candidates=%s', self.current_candidates)
+                    self.logger.debug('candidates=%s', self.current_candidates)
                     
                 except (KeyError, IndexError), err:
-                    logging.error('completion error: %s', err)
+                    self.logger.error('completion error: %s', err)
                     self.current_candidates = []
         
         try:
             response = self.current_candidates[state]
         except IndexError, e:
             response = None
-        logging.debug('complete(%s, %s) => %s', repr(text), state, response)
+        self.logger.debug('complete(%s, %s) => %s', repr(text), state, response)
         return response
 
 
