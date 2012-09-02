@@ -4,12 +4,17 @@ aclip2 - Another Command Line Interface Processor written in Python
 Seriously, isn't this what the world needs, another CLI processor in python?
 I get it, I know.  I just wanted to try my hand at writing one myself - deal with it.
 
-Impotus
--------
-I have a web application that I wanted to build my own CLI application to interact
-with the data and provide some admin functionality.
+What is it?
+-----------
+A simple to use API for creating a command line application with custom commands.
 
-This project is made to provide an API for designing your own cli applications
+Motivation
+----------
+I was working on a web application using Flask and I really like how Flask uses decorators to define
+simple views.  When I wanted to build a cli backend of the web application, I thought it would be
+interesting to try and apply a similar design to how I built the command list.
+
+
 
 Usage
 =====
@@ -18,52 +23,73 @@ Designing Commands
 ------------------
 :: 
 
+    def echo1(*args):
+        print args
+
     # Build a command directly
-    cmd = Command(name="cmd", desc="Sample", exec_func=exec_call_back)
+    cmd = Command(name="echo1", desc="Sample", exec_func=echo1)
 
 ::
 
     # Subclass
-    class Cmd(Command):
-        def __init__(self):
-            self.name = "cmd"
-            self.desc = "Sample"
+    class Echo2(Command):
+        """This docstring will show up as "help echo2" in the application"""
 
-        def execute(self):
-            print do something
-            return True
+        def execute(self, *args):
+            """This method will perform the echo functionality"""
+            print "echo2 %s" % " ".join(args)
 
 ::
 
     # Using function Decorator 
     @aclip.cmd
-    def cmd(args):
-        """description: Sample"
+    def echo3(*args):
+        """This docstring will appear as help for the echo cmd"""
+        print "echo3 %s" % " ".join(args)
 
 Building the CLI application
 -----------------------------
 ::
 
-    # Instatiate an Application object
-    app = aclip2.Application()
-    # Pass in the commands that are available
-    app.register_commands([cmd])
+    # Instatiate an Application object, use the module __name__ to set the name of the app
+    app = aclip2.Application(__name__)
+    
+    # Pass in a command that are available
+    app.register_cmd(cmd)
+    app.register_cmd(Echo2())
+    
     # Start the app
     app.start()
 
-# note "exit" and "help" are builtin comands
+A simple example of the app running:
+
+::
+    
+    ACLIP2 Command Line Framework
+    Let's get started
+    
+    -> echo1 Test echo1
+    echo1 Test echo1
+    -> echo2 abc def
+    echo2 abc def
+    ->help echo2
+    This docstring will show up as "help echo2" in the application
+    ->exit
+    Bye!
 
 
-Roadmap
-=======
+
+Roadmap/Status
+==============
 
 1. Get the basics working
-    1. Implement Decorator commands (for non-complex commands)
-    2. Implement Subclasses commands (for more complex commands- better control)
-    3. Add support for tab completion
-    4. Create documentation
-    5. Create unittests
+    1. Implement Decorator commands (for non-complex commands) **DONE**
+    2. Implement Subclasses commands (for more complex commands- better control) **DONE**
+    3. Add support for tab completion **DONE**
+    4. Get a first release done (get it working and ship it)      
+    5. Create documentation
+    6. Create unittests
+
 2. Add other "nice" features
     1. Colors
-    2. ProgressBar
-    3. Execute in thread
+    2. Execute in thread
