@@ -17,10 +17,12 @@ Usage
 Designing Commands
 ------------------
 :: 
+
     # Build a command directly
     cmd = Command(name="cmd", desc="Sample", exec_func=exec_call_back)
 
 ::
+
     # Subclass
     class Cmd(Command):
         def __init__(self):
