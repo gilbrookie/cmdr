@@ -1,4 +1,4 @@
-ACLIP2 - Another Command Line Interface Processor written in Python
+aclip2 - Another Command Line Interface Processor written in Python
 ===================================================================
 
 Seriously, isn't this what the world needs, another CLI processor in python?
@@ -16,9 +16,12 @@ Usage
 
 Designing Commands
 ------------------
+:: 
 
 # Build a command directly
 cmd = Command(name="cmd", desc="Sample", exec_func=exec_call_back)
+
+::
 
 # Subclass
 class Cmd(Command):
@@ -30,6 +33,8 @@ class Cmd(Command):
         print do something
         return True
 
+::
+
 # Using function Decorator 
 @aclip.cmd
 def cmd(args):
@@ -37,6 +42,7 @@ def cmd(args):
 
 Building the CLI application
 -----------------------------
+::
 
 # Instatiate an Application object
 app = aclip2.Application()
