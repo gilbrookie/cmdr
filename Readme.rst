@@ -87,9 +87,12 @@ Roadmap/Status
     2. Implement Subclasses commands (for more complex commands- better control) **DONE**
     3. Add support for tab completion **DONE**
     4. Get a first release done (get it working and ship it)      
-    5. Create documentation
-    6. Create unittests
+    5. Verify support for python version (2.7, 3.0) 
+    6. Create documentation
+    7. Create unittests
 
 2. Add other "nice" features
     1. Colors
+    2. Allow support for arbitrary level of command depth
+    3. Support sub command prompts 
     2. Execute in thread

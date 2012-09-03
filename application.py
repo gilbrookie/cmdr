@@ -93,10 +93,8 @@ class Application(object):
         readline.set_completer(self._complete_cmd)
         readline.parse_and_bind("tab: complete")
 
-
         # The main loop uses an flag to determine when it needs to exit. 
         # Run until the flag is set.
-
         while not self.exit_condition:
             #pp(self.complete_dict)
             
@@ -131,11 +129,12 @@ class Application(object):
         print self.exit_msg
 
     def _exec_cmd(self, cmd):
-        print cmd
-
         (fn, args) = self._lookup_cmd(cmd.split())
         if fn:
-            print fn(args)
+            if args:
+                fn(args)
+            else:
+                fn()
         else:
             raise CommandNotFound("Command not found: %s" % cmd)
 
@@ -144,15 +143,11 @@ class Application(object):
         # track the function to be executed
         ex_fn = None
         args = None
-
-        print key_list, len(key_list)
-
         key_len = len(key_list)
 
         for cmd in self.registered_cmds:
             # lookup the primary command name
             if key_list[0] == cmd.name:
-                print "found top cmd %s" % cmd.name
 
                 top_cmd = key_list.pop(0)
                 try:
@@ -162,14 +157,15 @@ class Application(object):
                         subcmd = key_list.pop(0)
                         meth = cmd.subcmds[subcmd]['exec_func']
                         
-                        print cmd.__class__.__name__
-                        print meth.name
-                        
-                        ex_fn = eval("%s.%s", % (cmd, meth.name)) 
+                        # if we have a subcmd, we need to get the method from
+                        # the instance stored in the command list
+                        ex_fn = getattr(cmd, meth.func_name)
                         args = key_list
+
                     else:
                         ex_fn = cmd.exec_func
                         args = key_list.pop(0)
+
                 except IndexError:
                     # if no match is found
                     ex_fn = cmd.exec_func   
