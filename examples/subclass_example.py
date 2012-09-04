@@ -1,7 +1,6 @@
 
 from datetime import datetime
-from aclip2 import application 
-from aclip2.command import Command, subcmd
+from cmdr import Cmdr, Command, subcmd
 from pprint import pprint as pp
 
 class Blog(Command):
@@ -37,7 +36,7 @@ class LoadTest(Command):
         print "Execute LoadTest"
 
 
-app = application.Application("blog_cli")
+app = Cmdr("blog_cli")
 
 b = Blog()
 p = Project()

@@ -1,5 +1,5 @@
 
-from aclip2 import Application, Command, subcmd
+from cmdr import Cmdr, Command, subcmd
 
 class Echo1(Command):
     def execute(self, *args):
@@ -25,7 +25,7 @@ class Echo2(Command):
     def execute(self):
         print self.__doc__
 
-app = Application(__name__, registered_commands=[Echo1(), Echo2()])
+app = Cmdr(__name__, registered_commands=[Echo1(), Echo2()])
 
 @app.cmd("echo3")
 def echo3(*args):

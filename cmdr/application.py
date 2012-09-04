@@ -1,36 +1,36 @@
 # -*- coding: utf-8 -*-
 
 """
-aclip2.application
+cmdr.application
 ~~~~~~~~~~~~~~~~~~
 
-This module implements the main Application class and supported functions.
+This module implements the main Cmdr class and supported functions.
 """
 
 import readline
 import logging
 
-from aclip2 import Command
+from cmdr import Command
 
-logging.basicConfig(filename='/tmp/aclip2.log', level=logging.DEBUG,
+logging.basicConfig(filename='/tmp/cmdr.log', level=logging.DEBUG,
                     format='%(asctime)s [%(levelname)s] %(module)s - %(message)s')
 
 
-class Application(object):
+class Cmdr(object):
     """
-    The Application object implements the main CLI interpreter and acts as the
+    The Cmdr object implements the main CLI interpreter and acts as the
     primary entry point for applications.
 
     It is passed the name of the application as it's only required argument.
     Optionally, a list of Command objects may be passed in, as well you can override
     the intro and exit messages.
 
-    The Application class keeps track of the available commands through a
-    registration system.  Users of the Application class can provide the commands at
+    The Cmdr class keeps track of the available commands through a
+    registration system.  Users of the Cmdr class can provide the commands at
     creation time or using the :meth:`register_cmd` method to register and make
     custom command available in the application.
 
-    The Application provides two built-in commands; exit and help.
+    The Cmdr provides two built-in commands; exit and help.
 
     For the commands that are registered, the application will try to provide basic
     tab completion and maintains a history of previously entered commands.
@@ -38,14 +38,14 @@ class Application(object):
     :param: app_name: the name of the application
     :param: registered_commands: can be used to set the list of registered commands
                                  as creation time.  Defaults to None.
-    :param: intro_msg: the introduction message printed by the Application class
-    :param: exit_msg: the exit message printed by the Application class when the it
+    :param: intro_msg: the introduction message printed by the Cmdr class
+    :param: exit_msg: the exit message printed by the Cmdr class when the it
                         is terminated.
 
 
     """
 
-    DEFAULT_WELCOME = u"""\nACLIP2 Command line framework\nLet's get started!\n"""
+    DEFAULT_WELCOME = u"""\ncmdr Command line framework\nLet's get started!\n"""
     DEFAULT_EXIT = u"""\nBye!"""
 
     def __init__(self, app_name, registered_commands=None, intro_msg=None,
@@ -78,7 +78,7 @@ class Application(object):
         self.current_candidates = []
 
     def start(self):
-        """Instructs the Application class to start the command line interreter.  All
+        """Instructs the Cmdr class to start the command line interreter.  All
         commands must be registered with the application prior to calling start."""
 
         # Show the welcome message up front.
@@ -175,7 +175,7 @@ class Application(object):
 
     def register_cmd(self, cmd):
         """
-        This method registers the provided command with the Application.  The command
+        This method registers the provided command with the Cmdr.  The command
         must be an instance if the Command class to be valid.
         """
         # Check if cmd has actually a Command Class
@@ -199,7 +199,7 @@ class Application(object):
         *Usage:*
 
         # Instantiate an app
-        app = aclip2.Application(__name__)
+        app = cmdr.Cmdr(__name__)
 
         # register a command using the decorator
         @app.cmd(echo):

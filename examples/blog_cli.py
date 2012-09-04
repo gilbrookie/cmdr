@@ -1,9 +1,9 @@
 
 from datetime import datetime
 
-from aclip2 import Application
+from cmdr import Cmdr
 
-app = Application("blog_cli")
+app = Cmdr("blog_cli")
 
 @app.cmd("blog add")    # Full command
 def add_blog():

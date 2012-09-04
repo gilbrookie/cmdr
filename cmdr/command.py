@@ -1,5 +1,7 @@
+# -*- coding: utf-8 -*-
+
 """
-aclip2.command
+cmdr.command
 ~~~~~~~~~~~~~~
 
 This module implements the base Command class.  This class defines the
@@ -52,7 +54,7 @@ class Command(object):
     Method 1: Direct
     ----------------
     ::
-        from aclip2 import Command
+        from cmdr import Command
 
         def callback(arg):
             print arg
@@ -64,11 +66,11 @@ class Command(object):
     ------------------
     ::
 
-        from aclip2 import Command
+        from cmdr import Command
 
         class Echo(Command):
 
-  def execute(self, args):
+            def execute(self, args):
                 print args
 
     """

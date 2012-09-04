@@ -1,11 +1,11 @@
 """
-aclip2 - Another command line interface powered with Python.
+cmdr - Another command line interface powered with Python.
 
 This module sets up the main interface for the public API.
 
 """
 
-__title__ = "aclip2"
+__title__ = "cmdr"
 __version__ = "0.0.2"
 __author__ = "James Gilbrook"
 __licence__ = "ISC"
