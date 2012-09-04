@@ -82,17 +82,71 @@ A simple example of the app running:
 Roadmap/Status
 ==============
 
-1. Get the basics working
-    1. Implement Decorator commands (for non-complex commands) **DONE**
-    2. Implement Subclasses commands (for more complex commands- better control) **DONE**
-    3. Add support for tab completion **DONE**
-    4. Get a first release done (get it working and ship it)      
-    5. Verify support for python version (2.7, 3.0) 
-    6. Create documentation
-    7. Create unittests
+I am nearing my goal of being feature complete for rev1 release:
+Below are the features that will (need to) make it in (priority order)
 
-2. Add other "nice" features
-    1. Colors
-    2. Allow support for arbitrary level of command depth
-    3. Support sub command prompts 
-    2. Execute in thread
+Application object:
+
+# Run primary interpreter loop **Done**
+# Provide a registration interface for commands **Done**.
+# Provide tab completion support **Done**
+# Expose builtin commands for "help" and "exit", implement each builtin.
+
+Command object:
+
+# Define (finalize) the data needed by all commands (Application needs these details) **Done**
+# Define the methods required by all commands **Done**
+# Allow methods to be used as sub commands **Done**
+# Helper properties (used by Application for tab completion and easy command lookup) **Done**
+
+Misc project requirements
+
+# Docstrings for all public classes/functions/methods/data **Done**
+# Passes pep8 and pyflakes **Done**
+# Must execute on Python 2.6 and python 2.7 **In progress**
+# Basic level of documentation
+# Basic level of unittests **In progress**
+# finalize package name  (aclip2 isn't great)
+# need setup.py and Makefile (for basic testing/docs/setup)
+
+Post rev1 feature ideas (in no order)
+-------------------------------------
+# Add support for terminal colors
+# Improve argument parsing (I have some ideas, but nothing has been vetted)
+# Allow support for arbitrary level of command depth
+# Support sub command prompts (to expose levels of subcommands)
+# Execute in thread
+# Progess bar (maybe useful for long running commands)
+# Unicode support
+
+Name Ideas
+==========
+
+Seriously, I need a new name.
+
+What am I really? A line based command interpreter tool/framework/api.  Kind of Like the Cmd module, but
+better/more flexible/more modern?  (hint: I'm not a fan of do_* style class methods)
+
+Uses:
+- quickly prototyping a projects
+- Provide command line (admin) tools for web applications, or any app with a db backend. 
+- To create test harnesses
+
+Other packages provide extensions to Cmd, but I was to provide a new way to create
+custom commands.  I want it to be easy and flexible (more than one way to do it) with little code
+required to get started.
+
+Ideas:
+
+PyInterpret
+PyCmd2
+CoCmd
+Cmdpy
+subcmdr (subcmd is taken by a very similar application)
+
+**cmdr** or **cmdrunner*
+
+
+
+
+
