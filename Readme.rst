@@ -1,5 +1,5 @@
-cmdr - A line based command interpreter framework/tools in Python
-===================================================================
+cmdr - A line based command interpreter framework/tool
+======================================================
 
 What is it?
 -----------
