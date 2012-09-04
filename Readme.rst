@@ -87,37 +87,37 @@ Below are the features that will (need to) make it in (priority order)
 
 Application object:
 
-# Run primary interpreter loop **Done**
-# Provide a registration interface for commands **Done**.
-# Provide tab completion support **Done**
-# Expose builtin commands for "help" and "exit", implement each builtin.
+#. Run primary interpreter loop **Done**
+#. Provide a registration interface for commands **Done**.
+#. Provide tab completion support **Done**
+#. Expose builtin commands for "help" and "exit", implement each builtin.
 
 Command object:
 
-# Define (finalize) the data needed by all commands (Application needs these details) **Done**
-# Define the methods required by all commands **Done**
-# Allow methods to be used as sub commands **Done**
-# Helper properties (used by Application for tab completion and easy command lookup) **Done**
+#. Define (finalize) the data needed by all commands (Application needs these details) **Done**
+#. Define the methods required by all commands **Done**
+#. Allow methods to be used as sub commands **Done**
+#. Helper properties (used by Application for tab completion and easy command lookup) **Done**
 
 Misc project requirements
 
-# Docstrings for all public classes/functions/methods/data **Done**
-# Passes pep8 and pyflakes **Done**
-# Must execute on Python 2.6 and python 2.7 **In progress**
-# Basic level of documentation
-# Basic level of unittests **In progress**
-# finalize package name  (aclip2 isn't great)
-# need setup.py and Makefile (for basic testing/docs/setup)
+#. Docstrings for all public classes/functions/methods/data **Done**
+#. Passes pep8 and pyflakes **Done**
+#. Must execute on Python 2.6 and python 2.7 **In progress**
+#. Basic level of documentation
+#. Basic level of unittests **In progress**
+#. finalize package name  (aclip2 isn't great)
+#. need setup.py and Makefile (for basic testing/docs/setup)
 
 Post rev1 feature ideas (in no order)
 -------------------------------------
-# Add support for terminal colors
-# Improve argument parsing (I have some ideas, but nothing has been vetted)
-# Allow support for arbitrary level of command depth
-# Support sub command prompts (to expose levels of subcommands)
-# Execute in thread
-# Progess bar (maybe useful for long running commands)
-# Unicode support
+* Add support for terminal colors
+* Improve argument parsing (I have some ideas, but nothing has been vetted)
+* Allow support for arbitrary level of command depth
+* Support sub command prompts (to expose levels of subcommands)
+* Execute in thread
+* Progess bar (maybe useful for long running commands)
+* Unicode support
 
 Name Ideas
 ==========
