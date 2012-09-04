@@ -7,14 +7,14 @@ aclip2.application
 This module implements the main Application class and supported functions.
 """
 
-from pprint import pprint as pp
 import readline
 import logging
 
 from aclip2 import Command
 
-logging.basicConfig(filename='/tmp/aclip2.log', level=logging.DEBUG, 
+logging.basicConfig(filename='/tmp/aclip2.log', level=logging.DEBUG,
                     format='%(asctime)s [%(levelname)s] %(module)s - %(message)s')
+
 
 class Application(object):
     """
@@ -44,24 +44,24 @@ class Application(object):
 
 
     """
-    
+
     DEFAULT_WELCOME = u"""\nACLIP2 Command line framework\nLet's get started!\n"""
     DEFAULT_EXIT = u"""\nBye!"""
 
     def __init__(self, app_name, registered_commands=None, intro_msg=None,
             exit_msg=None, prompt_str=None):
-        
+
         self.logger = logging.getLogger(self.__class__.__name__)
         # The default prompt string
         self.prompt = "-> "
         if prompt_str:
-            self.prompt= prompt_str
+            self.prompt = prompt_str
 
         self.app_name = app_name
 
         self.complete_dict = {}
-        
-        self.registered_cmds =[]
+
+        self.registered_cmds = []
         if registered_commands:
             # we need to process each command through the registration function
             for cmd in registered_commands:
@@ -74,18 +74,16 @@ class Application(object):
 
         if not exit_msg:
             self.exit_msg = self.DEFAULT_EXIT
-        
-        self.current_candidates = []
 
+        self.current_candidates = []
 
     def start(self):
         """Instructs the Application class to start the command line interreter.  All
         commands must be registered with the application prior to calling start."""
-        
-        
-        # Show the welcome message up front.        
+
+        # Show the welcome message up front.
         print self.welcome_msg
-       
+
         # set up the command completion code - so we can do "TAB" completion.
         self.rl_completer = readline.get_completer()
 
@@ -93,18 +91,17 @@ class Application(object):
         readline.set_completer(self._complete_cmd)
         readline.parse_and_bind("tab: complete")
 
-        # The main loop uses an flag to determine when it needs to exit. 
+        # The main loop uses an flag to determine when it needs to exit.
         # Run until the flag is set.
         while not self.exit_condition:
-            #pp(self.complete_dict)
-            
-            try:              
+
+            try:
                 # read in the text input from cli
                 cmd = raw_input(self.prompt)
 
                 # then, execute
                 self._exec_cmd(cmd)
-                               
+
             # Catch keyboard shortcuts to kill the app (CTRL+C, CRTL+Z)
             except (KeyboardInterrupt, EOFError):
                 self.exit_condition = True
@@ -143,20 +140,19 @@ class Application(object):
         # track the function to be executed
         ex_fn = None
         args = None
-        key_len = len(key_list)
 
         for cmd in self.registered_cmds:
             # lookup the primary command name
             if key_list[0] == cmd.name:
 
-                top_cmd = key_list.pop(0)
+                key_list.pop(0)
                 try:
                     # if we match, try to match subcmds
                     if key_list[0] in cmd.subcmds:
                         # we found a subcmd
                         subcmd = key_list.pop(0)
                         meth = cmd.subcmds[subcmd]['exec_func']
-                        
+
                         # if we have a subcmd, we need to get the method from
                         # the instance stored in the command list
                         ex_fn = getattr(cmd, meth.func_name)
@@ -168,7 +164,7 @@ class Application(object):
 
                 except IndexError:
                     # if no match is found
-                    ex_fn = cmd.exec_func   
+                    ex_fn = cmd.exec_func
 
                 break
 
@@ -191,11 +187,10 @@ class Application(object):
         else:
             print "expecting a Command object"
 
-
     def cmd(self, cmd_name, alt=None):
         """A function decorator that registers the function as a command within
         the application.
-        
+
         :param cmd_name: the name of the command (it is how the command will appear
                          within the application
         :param alt: an alternate name for the command - usually a shortcut that the
@@ -263,34 +258,35 @@ class Application(object):
                         # later word
                         first = words[0]
                         candidates = self.complete_dict[first]
-                    
+
                     if being_completed:
                         # match options with portion of input
                         # being completed
-                        self.current_candidates = [ w for w in candidates
-                                                    if w.startswith(being_completed) ]
+                        self.current_candidates = \
+                                        [w for w in candidates
+                                         if w.startswith(being_completed)]
                     else:
                         # matching empty string so use all candidates
                         self.current_candidates = candidates
 
                     self.logger.debug('candidates=%s', self.current_candidates)
-                    
+
                 except (KeyError, IndexError), err:
                     self.logger.error('completion error: %s', err)
                     self.current_candidates = []
-        
+
         try:
             response = self.current_candidates[state]
-        except IndexError, e:
+        except IndexError:
             response = None
         self.logger.debug('complete(%s, %s) => %s', repr(text), state, response)
         return response
 
 
-
 class CommandNotFound(Exception):
     """Raised when an unregistered command is entered"""
     pass
+
 
 class InvalidCommandType(Exception):
     """Raised when attempting to register a command that is not an instance of the

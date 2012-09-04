@@ -2,11 +2,12 @@
 aclip2.command
 ~~~~~~~~~~~~~~
 
-This module implements the base Command class.  This class defines the functionality
-required the register commands with the Application and allow them to be executed.
+This module implements the base Command class.  This class defines the
+functionality required the register commands with the Application and allow
+them to be executed.
 """
-from functools import wraps
 import logging
+
 
 class CmdMetaclass(type):
     def __new__(cls, name, bases, attrs):
@@ -16,26 +17,25 @@ class CmdMetaclass(type):
 
         # a dict to track sub cmds
         subcmds = {}
-        
-        # Iterate through the attrs, looking specifically for methods that have the
-        # "is_subcmd" attribute.   This attribute is not default, it is added with
-        # the @subcmd decorator.
+
+        # Iterate through the attrs, looking specifically for methods that have
+        # the "is_subcmd" attribute.   This attribute is not default, it is
+        # added with the @subcmd decorator.
 
         for key in attrs:
             attr = getattr(new_cls, key)
-            try: 
-                if hasattr(attr,"is_subcmd"):
-                    print "SUBCMD: %s" % key
-
-                    subcmds[key] = {'help': attr.__doc__, 'exec_func': attr }
+            try:
+                if hasattr(attr, "is_subcmd"):
+                    subcmds[key] = {'help': attr.__doc__, 'exec_func': attr}
 
             except AttributeError:
                 continue
 
         # Once we have found any/all subcmds, add them as a class attibute
         setattr(new_cls, "subcmds", subcmds)
-        # return the new class 
+        # return the new class
         return new_cls
+
 
 class Command(object):
     """
@@ -63,22 +63,23 @@ class Command(object):
     Method 2: Subclass
     ------------------
     ::
-        
+
         from aclip2 import Command
 
         class Echo(Command):
-            def execute(self, args):
+
+  def execute(self, args):
                 print args
 
     """
 
     __metaclass__ = CmdMetaclass
 
-    def __init__(self, cmd=None, alt=None, sub_cmd_set=None, description=None, 
+    def __init__(self, cmd=None, alt=None, sub_cmd_set=None, description=None,
                     valid_func=None, exec_func=None, arg_spec=None):
 
         self.logger = logging.getLogger(self.__class__.__name__)
-        
+
         # if the cmd can be split into two or more words (has a space in it) we take
         # the first part as the primary command and the second part as a subcommand
 
@@ -88,7 +89,8 @@ class Command(object):
             parts = cmd.split()
             if len(parts) > 1:
                 self.name = parts[0]
-                self.subcmds[parts[1]] = {'help':description, 'exec_func':exec_func}
+                self.subcmds[parts[1]] = {'help': description,
+                                          'exec_func': exec_func}
             else:
                 self.name = cmd
         else:
@@ -112,12 +114,12 @@ class Command(object):
     @property
     def cmd_dict(self):
         """Returns a dictionary representation of the command"""
-        return { self.name: { 'help'     : self.description, 
-                            'alt'      : self.alt, 
+        return {self.name: {'help': self.description,
+                            'alt': self.alt,
                             'valid_func': self.valid_func,
                             'exec_func': self.exec_func,
                             'comp_dict': self.completion_dict,
-                            'subcmds' : self.subcmds } }
+                            'subcmds': self.subcmds}}
 
     @property
     def cmd_strs(self):
@@ -128,7 +130,6 @@ class Command(object):
         else:
             return [" ".join([self.name, sc]) for sc in self.subcmds.keys()]
 
-
     def validate(self):
         """Validates the commands arguments"""
         print "validate"
@@ -136,7 +137,7 @@ class Command(object):
     def execute(self, cmd, args=None):
         """This method implements the functionality of the command.  When an
         Application calls to execute any command this method is called (by default).
-        
+
         Execution code can be overriden with a callback method when the Command is
         created.
 
@@ -160,8 +161,8 @@ def subcmd(f):
     call the method defined by the decorator for the provided command.
     """
 
-    # All this decorator does is set a function (method to be specific) attribute 
-    # "is_subcmd" so that the Command class's metaclass can find them and configure 
+    # All this decorator does is set a function (method to be specific) attribute
+    # "is_subcmd" so that the Command class's metaclass can find them and configure
     # the method as sub commands.
 
     f.is_subcmd = True
