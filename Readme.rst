@@ -1,26 +1,53 @@
-aclip2 - Another Command Line Interface Processor written in Python
+cmdr - A line based command interpreter framework/tools in Python
 ===================================================================
-
-Seriously, isn't this what the world needs, another CLI processor in python?
-I get it, I know.  I just wanted to try my hand at writing one myself - deal with it.
 
 What is it?
 -----------
-A simple to use API for creating a command line application with custom commands.
+A simple to use API for creating command line application with custom commands.  The goal is be
+flexible and require as little code as possible to get up and running.
 
 Motivation
 ----------
 I was working on a web application using Flask and I really like how Flask uses decorators to define
-simple views.  When I wanted to build a cli backend of the web application, I thought it would be
+simple views. It was really easy to get something up and running.  
+When I wanted to build a cli backend of the web application, I thought it would be
 interesting to try and apply a similar design to how I built the command list.
 
 
+Here is a simple example:
 
-Usage
-=====
+::
+
+    from cmdr import Application
+
+    # Create an application (give it the name of the current module)
+    app = Application(__name__):
+
+    # Define simple command using a decorator, the argument passed in is the name of the command
+    @app.cmd("hello")
+    def say_hello():
+        print "Hello!"
+
+    # Start the interpreter loop
+    app.start()
+
+    # you'll get a prompt, and when you enter "hello" the say_hello() function is called.
+    ...
+    >hello
+    Hello!
+    ...
+    
+
+Advanced Usage
+==============
 
 Designing Commands
 ------------------
+
+There are three ways to develop commands for the cmdr application
+
+Method 1: Creating a Command object with some arguments
+-------------------------------------------------------
 :: 
 
     def echo1(*args):
@@ -29,6 +56,8 @@ Designing Commands
     # Build a command directly
     cmd = Command(name="echo1", desc="Sample", exec_func=echo1)
 
+Method 2: Subclassing Command - For greater control/flexibility
+---------------------------------------------------------------
 ::
 
     # Subclass
@@ -39,6 +68,9 @@ Designing Commands
             """This method will perform the echo functionality"""
             print "echo2 %s" % " ".join(args)
 
+
+Method 3: Using the cmd decorator
+---------------------------------
 ::
 
     # Using function Decorator 
@@ -48,7 +80,7 @@ Designing Commands
         print "echo3 %s" % " ".join(args)
 
 Building the CLI application
------------------------------
+============================
 ::
 
     # Instatiate an Application object, use the module __name__ to set the name of the app
