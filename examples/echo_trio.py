@@ -2,14 +2,16 @@
 from cmdr import Cmdr, Command, subcmd
 
 class Echo1(Command):
+    """A simple Echo Command as a basic subclass"""
     def execute(self, *args):
         print "Echo1!"
         print args[0]
 
 class Echo2(Command):
-    """echo2 - a simple echo command.\nPlease use one of the following commands
-    echo carets
-    echo stars <args>
+    """echo2 - a simple echo command.
+    \t\t\tAvailable subcommands:
+    \t\t\t\techo carets
+    \t\t\t\techo stars <args>
     """
     @subcmd
     def stars(self):

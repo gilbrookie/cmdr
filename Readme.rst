@@ -74,7 +74,7 @@ Method 3: Using the cmd decorator
 ::
 
     # Using function Decorator 
-    @aclip.cmd
+    @app.cmd
     def echo3(*args):
         """This docstring will appear as help for the echo cmd"""
         print "echo3 %s" % " ".join(args)
