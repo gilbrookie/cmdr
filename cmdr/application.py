@@ -49,7 +49,7 @@ class Cmdr(object):
     DEFAULT_EXIT = u"""\nBye!"""
 
     def __init__(self, app_name, registered_commands=None, intro_msg=None,
-            exit_msg=None, prompt_str=None):
+                 exit_msg=None, prompt_str=None):
 
         self.logger = logging.getLogger(self.__class__.__name__)
         # The default prompt string
@@ -263,8 +263,8 @@ class Cmdr(object):
                         # match options with portion of input
                         # being completed
                         self.current_candidates = \
-                                        [w for w in candidates
-                                         if w.startswith(being_completed)]
+                            [w for w in candidates
+                             if w.startswith(being_completed)]
                     else:
                         # matching empty string so use all candidates
                         self.current_candidates = candidates
