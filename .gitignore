@@ -1,2 +1,7 @@
 *.pyc
 *.swp
+<<<<<<< HEAD
+=======
+cmdr.egg-info/*
+
+>>>>>>> master

@@ -78,7 +78,7 @@ class Command(object):
     __metaclass__ = CmdMetaclass
 
     def __init__(self, cmd=None, alt=None, sub_cmd_set=None, description=None,
-                    valid_func=None, exec_func=None, arg_spec=None):
+                 valid_func=None, exec_func=None, arg_spec=None):
 
         self.logger = logging.getLogger(self.__class__.__name__)
 

@@ -45,11 +45,11 @@ class Cmdr(object):
 
     """
 
-    DEFAULT_WELCOME = u"""\ncmdr Command line framework\nLet's get started!\n"""
+    DEFAULT_WELCOME = u"""\nCmdr - Let's get started!\n"""
     DEFAULT_EXIT = u"""\nBye!"""
 
     def __init__(self, app_name, registered_commands=None, intro_msg=None,
-            exit_msg=None, prompt_str=None):
+                 exit_msg=None, prompt_str=None):
 
         self.logger = logging.getLogger(self.__class__.__name__)
         # The default prompt string
@@ -60,8 +60,16 @@ class Cmdr(object):
         self.app_name = app_name
 
         self.complete_dict = {}
-
         self.registered_cmds = []
+
+        # Add the default registered commands (help, exit)
+        self.builtin_cmds = [
+            Command(cmd='help', description="Shows this menu", exec_func=self._show_cmds()),
+            Command(cmd='exit', description="Exits the app", exec_func=self.exit())]
+        
+        for cmd in self.builtin_cmds:
+            self.register_cmd(cmd)
+
         if registered_commands:
             # we need to process each command through the registration function
             for cmd in registered_commands:
@@ -98,9 +106,14 @@ class Cmdr(object):
             try:
                 # read in the text input from cli
                 cmd = raw_input(self.prompt)
-
-                # then, execute
-                self._exec_cmd(cmd)
+                
+                if cmd == 'help' or cmd == "?":
+                    self._show_cmds()
+                elif cmd == "exit" or cmd == "q":
+                    self.exit_condition = True
+                else:
+                    # then, execute
+                    self._exec_cmd(cmd)
 
             # Catch keyboard shortcuts to kill the app (CTRL+C, CRTL+Z)
             except (KeyboardInterrupt, EOFError):
@@ -215,7 +228,13 @@ class Cmdr(object):
         """
 
         def decorator(f):
-            self.logger.info("Registering new command '%s', func=%s" % (cmd_name, f))
+            self.logger.info("Registering new command '%s', func=%s" % 
+                            (cmd_name, f))
+            # If the function does not have a docstring, override the __doc__ to
+            # ensure that the Command base class's docstring is not shown.
+            if not f.__doc__:
+                f.__doc__ = " "
+
             # Create a new Command object and register it.
             c = Command(cmd=cmd_name, description=f.__doc__, exec_func=f)
             self.register_cmd(c)
@@ -228,7 +247,10 @@ class Cmdr(object):
 
     def _show_cmds(self):
         for cmd in self.registered_cmds:
-            print cmd['name']
+            print "\t%s\t\t%s" % (cmd.name, cmd.description)
+
+    def exit(self):
+        self.exit_condition = True
 
     def _complete_cmd(self, text, state):
         self.logger.debug('STATE=%s', state)
@@ -263,8 +285,8 @@ class Cmdr(object):
                         # match options with portion of input
                         # being completed
                         self.current_candidates = \
-                                        [w for w in candidates
-                                         if w.startswith(being_completed)]
+                            [w for w in candidates
+                             if w.startswith(being_completed)]
                     else:
                         # matching empty string so use all candidates
                         self.current_candidates = candidates

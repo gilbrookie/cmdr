@@ -13,4 +13,4 @@ __copyright__ = "Copyright 2012 James Gilbrook"
 
 # Expose the public api via imports of submodules
 from command import Command, subcmd
-from application import Application
+from application import Cmdr

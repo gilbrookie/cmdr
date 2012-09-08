@@ -13,6 +13,8 @@ simple views. It was really easy to get something up and running.
 When I wanted to build a cli backend of the web application, I thought it would be
 interesting to try and apply a similar design to how I built the command list.
 
+Usage
+-----
 
 Here is a simple example:
 
@@ -74,7 +76,7 @@ Method 3: Using the cmd decorator
 ::
 
     # Using function Decorator 
-    @aclip.cmd
+    @app.cmd
     def echo3(*args):
         """This docstring will appear as help for the echo cmd"""
         print "echo3 %s" % " ".join(args)
@@ -176,7 +178,7 @@ CoCmd
 Cmdpy
 subcmdr (subcmd is taken by a very similar application)
 
-**cmdr** or **cmdrunner*
+**cmdr** or **cmdrunner**
 
 
 
