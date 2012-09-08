@@ -20,10 +20,10 @@ Here is a simple example:
 
 ::
 
-    from cmdr import Application
+    from cmdr import Cmdr
 
     # Create an application (give it the name of the current module)
-    app = Application(__name__):
+    app = Cmdr(__name__):
 
     # Define simple command using a decorator, the argument passed in is the name of the command
     @app.cmd("hello")
@@ -85,8 +85,8 @@ Building the CLI application
 ============================
 ::
 
-    # Instatiate an Application object, use the module __name__ to set the name of the app
-    app = aclip2.Application(__name__)
+    # Instatiate an Cmdr object, use the module __name__ to set the name of the app
+    app = cmdr.Cmdr(__name__)
     
     # Pass in a command that are available
     app.register_cmd(cmd)
@@ -99,7 +99,7 @@ A simple example of the app running:
 
 ::
     
-    ACLIP2 Command Line Framework
+    cmdr Command Line Framework
     Let's get started
     
     -> echo1 Test echo1
@@ -119,29 +119,34 @@ Roadmap/Status
 I am nearing my goal of being feature complete for rev1 release:
 Below are the features that will (need to) make it in (priority order)
 
-Application object:
+Cmdr object:  **COMPLETE**
 
 #. Run primary interpreter loop **Done**
 #. Provide a registration interface for commands **Done**.
 #. Provide tab completion support **Done**
-#. Expose builtin commands for "help" and "exit", implement each builtin.
+#. Expose builtin commands for "help" and "exit", implement each builtin. **Done**
 
-Command object:
+Command object:  **COMPLETE**
 
-#. Define (finalize) the data needed by all commands (Application needs these details) **Done**
+#. Define (finalize) the data needed by all commands (Cmdr needs these details) **Done**
 #. Define the methods required by all commands **Done**
 #. Allow methods to be used as sub commands **Done**
-#. Helper properties (used by Application for tab completion and easy command lookup) **Done**
+#. Helper properties (used by Cmdr for tab completion and easy command lookup) **Done**
 
-Misc project requirements
+Misc project requirements  **IN PROGRESS**
 
 #. Docstrings for all public classes/functions/methods/data **Done**
 #. Passes pep8 and pyflakes **Done**
 #. Must execute on Python 2.6 and python 2.7 **In progress**
 #. Basic level of documentation
 #. Basic level of unittests **In progress**
-#. finalize package name  (aclip2 isn't great)
-#. need setup.py and Makefile (for basic testing/docs/setup)
+#. finalize package name  (cmdr has been chosenas package name!) **Done**
+#. need setup.py and Makefile (for basic testing/docs/setup) **Done**
+#. register and publish to pypi
+
+
+**Target rev1 version is 0.1.**
+
 
 Post rev1 feature ideas (in no order)
 -------------------------------------
@@ -152,35 +157,6 @@ Post rev1 feature ideas (in no order)
 * Execute in thread
 * Progess bar (maybe useful for long running commands)
 * Unicode support
-
-Name Ideas
-==========
-
-Seriously, I need a new name.
-
-What am I really? A line based command interpreter tool/framework/api.  Kind of Like the Cmd module, but
-better/more flexible/more modern?  (hint: I'm not a fan of do_* style class methods)
-
-Uses:
-- quickly prototyping a projects
-- Provide command line (admin) tools for web applications, or any app with a db backend. 
-- To create test harnesses
-
-Other packages provide extensions to Cmd, but I was to provide a new way to create
-custom commands.  I want it to be easy and flexible (more than one way to do it) with little code
-required to get started.
-
-Ideas:
-
-PyInterpret
-PyCmd2
-CoCmd
-Cmdpy
-subcmdr (subcmd is taken by a very similar application)
-
-**cmdr** or **cmdrunner**
-
-
 
 
 

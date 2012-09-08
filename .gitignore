@@ -1,4 +1,4 @@
 *.pyc
 *.swp
 cmdr.egg-info/*
-
+Readme.html
