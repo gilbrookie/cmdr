@@ -1,7 +1,4 @@
 *.pyc
 *.swp
-<<<<<<< HEAD
-=======
 cmdr.egg-info/*
-
->>>>>>> master
+Readme.html

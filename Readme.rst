@@ -20,10 +20,10 @@ Here is a simple example:
 
 ::
 
-    from cmdr import Application
+    from cmdr import Cmdr
 
     # Create an application (give it the name of the current module)
-    app = Application(__name__):
+    app = Cmdr(__name__):
 
     # Define simple command using a decorator, the argument passed in is the name of the command
     @app.cmd("hello")
@@ -85,8 +85,8 @@ Building the CLI application
 ============================
 ::
 
-    # Instatiate an Application object, use the module __name__ to set the name of the app
-    app = aclip2.Application(__name__)
+    # Instatiate an Cmdr object, use the module __name__ to set the name of the app
+    app = cmdr.Cmdr(__name__)
     
     # Pass in a command that are available
     app.register_cmd(cmd)
@@ -99,7 +99,7 @@ A simple example of the app running:
 
 ::
     
-    ACLIP2 Command Line Framework
+    cmdr Command Line Framework
     Let's get started
     
     -> echo1 Test echo1
@@ -119,7 +119,7 @@ Roadmap/Status
 I am nearing my goal of being feature complete for rev1 release:
 Below are the features that will (need to) make it in (priority order)
 
-Application object:
+Cmdr object:
 
 #. Run primary interpreter loop **Done**
 #. Provide a registration interface for commands **Done**.
@@ -128,10 +128,10 @@ Application object:
 
 Command object:
 
-#. Define (finalize) the data needed by all commands (Application needs these details) **Done**
+#. Define (finalize) the data needed by all commands (Cmdr needs these details) **Done**
 #. Define the methods required by all commands **Done**
 #. Allow methods to be used as sub commands **Done**
-#. Helper properties (used by Application for tab completion and easy command lookup) **Done**
+#. Helper properties (used by Cmdr for tab completion and easy command lookup) **Done**
 
 Misc project requirements
 
@@ -140,7 +140,7 @@ Misc project requirements
 #. Must execute on Python 2.6 and python 2.7 **In progress**
 #. Basic level of documentation
 #. Basic level of unittests **In progress**
-#. finalize package name  (aclip2 isn't great)
+#. finalize package name  (cmdr isn't great)
 #. need setup.py and Makefile (for basic testing/docs/setup)
 
 Post rev1 feature ideas (in no order)
