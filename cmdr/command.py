@@ -154,8 +154,8 @@ class Command(object):
         created.
 
         When execute is called, it is given the full command (incl subcmds) as well
-        as the provided arguments.  It is up to the execution method or validation
-        method to assure that the arguments are correct.
+        as the provided arguments.  It is up to the execution method to ensure 
+        that the arguments are correct.
 
         """
         self.logger.info("'%s' execute()" % self.name)
