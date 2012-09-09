@@ -28,3 +28,8 @@ readme:
 # remove the local staging files 
 uninstall:
 		python setup.py develop -u
+
+sphinx-docs:
+		cd docs; make dirhtml
+# Generate sphinx documentation
+docs: sphinx-docs

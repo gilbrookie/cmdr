@@ -78,37 +78,52 @@ class Command(object):
     __metaclass__ = CmdMetaclass
 
     def __init__(self, cmd=None, alt=None, sub_cmd_set=None, description=None,
-                 valid_func=None, exec_func=None, arg_spec=None):
+                 exec_func=None, arg_spec=None):
 
         self.logger = logging.getLogger(self.__class__.__name__)
 
-        # if the cmd can be split into two or more words (has a space in it) we take
-        # the first part as the primary command and the second part as a subcommand
+        self.subcmds = {}
+        
+        # In cases where Commands are created directly (cmdr.cmd generator, or
+        # user generated, we need to check if a command string is actually two 
+        # commands.
+
+        # if the cmd can be split into two or more words (has a space in it) we 
+        # take the first part as the primary command and the second part as a 
+        # subcommand. In this case the primary command's exec_func needs to be 
+        # the default execute(), and the exec_func assigned to the subcmd.
 
         # **NOTE: currently only supports one level of sub command
-
         if cmd:
             parts = cmd.split()
+            
+            self.exec_func = exec_func if exec_func else self.execute
+
+            # We have a subcmd
             if len(parts) > 1:
+                # figure out how to assign the execution function
+                if exec_func:
+                    self.sub_exec = exec_func
+                    self.exec_func = self.execute
+                else:
+                    self.exec_func = self.sub_exec = self.execute
+                        
+                # assign accordingly
                 self.name = parts[0]
                 self.subcmds[parts[1]] = {'help': description,
-                                          'exec_func': exec_func}
+                                          'exec_func': self.sub_exec}
+            # Single command
             else:
                 self.name = cmd
         else:
             self.name = self.__class__.__name__.lower()
+            self.exec_func = self.execute
+            if exec_func:
+                self.exec_func = exec_func
 
         self.description = description
         if not description:
-            self.description = self.__doc__
-
-        self.valid_func = self.validate
-        if valid_func:
-            self.valid_func = valid_func
-
-        self.exec_func = self.execute
-        if exec_func:
-            self.exec_func = exec_func
+            self.description = self.__doc__ 
 
         self.alt = alt
         self.completion_dict = None
@@ -118,7 +133,6 @@ class Command(object):
         """Returns a dictionary representation of the command"""
         return {self.name: {'help': self.description,
                             'alt': self.alt,
-                            'valid_func': self.valid_func,
                             'exec_func': self.exec_func,
                             'comp_dict': self.completion_dict,
                             'subcmds': self.subcmds}}
@@ -132,10 +146,6 @@ class Command(object):
         else:
             return [" ".join([self.name, sc]) for sc in self.subcmds.keys()]
 
-    def validate(self):
-        """Validates the commands arguments"""
-        print "validate"
-
     def execute(self, cmd, args=None):
         """This method implements the functionality of the command.  When an
         Application calls to execute any command this method is called (by default).
@@ -144,8 +154,8 @@ class Command(object):
         created.
 
         When execute is called, it is given the full command (incl subcmds) as well
-        as the provided arguments.  It is up to the execution method or validation
-        method to assure that the arguments are correct.
+        as the provided arguments.  It is up to the execution method to ensure 
+        that the arguments are correct.
 
         """
         self.logger.info("'%s' execute()" % self.name)
