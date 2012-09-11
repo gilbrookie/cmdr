@@ -73,12 +73,18 @@ class Command(object):
             def execute(self, args):
                 print args
 
+
+    Optional Arguments:
+    :param cmd: The name of the command
+    :param alt: An alternate name for the command
+    :param description: the "help" string for the command"
+    :param exec_func: a callback function that performs the command's "action"
+
     """
 
     __metaclass__ = CmdMetaclass
 
-    def __init__(self, cmd=None, alt=None, sub_cmd_set=None, description=None,
-                 exec_func=None, arg_spec=None):
+    def __init__(self, cmd=None, alt=None, description=None, exec_func=None):
 
         self.logger = logging.getLogger(self.__class__.__name__)
 
