@@ -157,6 +157,6 @@ Post rev1 feature ideas (in no order)
 * Execute in thread
 * Progess bar (maybe useful for long running commands)
 * Unicode support
-
+* Add subcmds as argument to Command. Are subcmds Command objects or dict?
 
 

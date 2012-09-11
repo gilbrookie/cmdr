@@ -12,9 +12,11 @@ def func_no_args():
 
 #Test Command subclasses
 class TestCmd1(cmdr.Command):
+    """TestCmd1 help str"""
     pass
 
 class TestCmd2(cmdr.Command):
+    """TestCmd2 help str"""
     def execute(self, *args):
         return "override execute"
 
@@ -133,10 +135,56 @@ class TestDirectCommand(unittest.TestCase):
 
 
 class TestSubclassCommand(unittest.TestCase):
-    pass
+    def setUp(self):
+        self.cmd1 = TestCmd1()
+        self.cmd2 = TestCmd2()
+
+    def tearDown(self):
+        self.cmd1 = None
+        self.cmd2 = None
+
+    def test_cmd_name(self):
+        self.assertEqual("testcmd1", self.cmd1.name)
+        self.assertEqual("testcmd2", self.cmd2.name)
+
+    def test_description(self):
+        self.assertEqual("TestCmd1 help str", self.cmd1.description)
+        self.assertEqual("TestCmd2 help str", self.cmd2.description)
+    
+    def test_cmd_dict(self):
+        pass
+
+    def test_cmd_strs(self):
+        self.assertEqual(["testcmd1"], self.cmd1.cmd_strs)
+        self.assertEqual(["testcmd2"], self.cmd2.cmd_strs)
+
+    def test_cmd_exec_func(self):
+        self.assertEqual(self.cmd1.exec_func,
+                         self.cmd1.execute)
+        self.assertEqual(self.cmd2.exec_func,
+                         self.cmd2.execute)
+
 
 class TestSubclassWithSubCmds(unittest.TestCase):
-    pass
+    def setUp(self):
+        self.cmd1 = TestCmd3()
+        self.cmd2 = TestCmd4()
 
-class TestDirectWithSubCmds(unittest.TestCase):
-    pass
+    def tearDown(self):
+        self.cmd1 = None
+        self.cmd2 = None
+
+    def test_cmd_name(self):
+        pass
+    
+    def test_description(self):
+        pass
+    
+    def test_cmd_dict(self):
+        pass
+
+    def test_cmd_strs(self):
+        pass
+
+    def test_cmd_exec_func(self):
+        pass
