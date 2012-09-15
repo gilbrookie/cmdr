@@ -3,3 +3,4 @@
 cmdr.egg-info/*
 Readme.html
 docs/_build/*
+.tox
