@@ -21,12 +21,16 @@ class TestCmd2(cmdr.Command):
         return "override execute"
 
 class TestCmd3(cmdr.Command):
+    """TestCmd3 help str"""
+    
     @cmdr.subcmd
     def sub1(self, *args):
+        """Test sub1"""
         pass
 
     @cmdr.subcmd
     def sub2(self):
+        """Test sub2"""
         pass
 
 class TestCmd4(cmdr.Command):
@@ -175,16 +179,38 @@ class TestSubclassWithSubCmds(unittest.TestCase):
         self.cmd2 = None
 
     def test_cmd_name(self):
-        pass
+        # the case for cmd1 covered in TestCommandBasic
+        self.assertEqual("testcmd3", self.cmd1.name)
+        self.assertEqual("testcmd4", self.cmd2.name)
     
     def test_description(self):
-        pass
+        self.assertEqual("TestCmd3 help str", self.cmd1.description)
+        self.assertEqual(None, self.cmd2.description)
     
-    def test_cmd_dict(self):
-        pass
-
     def test_cmd_strs(self):
-        pass
+        self.assertEqual(["testcmd3 sub2", "testcmd3 sub1"], 
+                         self.cmd1.cmd_strs)
+        self.assertEqual(["testcmd4 sub1"], self.cmd2.cmd_strs)
 
     def test_cmd_exec_func(self):
-        pass
+        self.assertEqual(self.cmd1.exec_func,
+                         self.cmd1.execute)
+        self.assertEqual(self.cmd2.exec_func,
+                         self.cmd2.execute)
+
+    def test_subcmd_name(self):
+        self.assertIn("sub1", self.cmd1.subcmds)
+        self.assertIn("sub2", self.cmd1.subcmds)
+
+        self.assertIn("sub1", self.cmd2.subcmds)
+        self.assertNotIn("sub2", self.cmd2.subcmds)
+
+    def test_subcmd_description(self):
+        self.assertEqual("Test sub1", self.cmd1.subcmds['sub1']['help'])
+        self.assertEqual("Test sub2", self.cmd1.subcmds['sub2']['help'])
+        self.assertEqual(None, self.cmd2.subcmds['sub1']['help'])
+
+    def test_subcmd_exec_func(self):
+        self.assertEqual(TestCmd3.sub1, self.cmd1.subcmds['sub1']['exec_func'])
+        self.assertEqual(TestCmd3.sub2, self.cmd1.subcmds['sub2']['exec_func'])
+        self.assertEqual(TestCmd4.sub1, self.cmd2.subcmds['sub1']['exec_func'])

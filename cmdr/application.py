@@ -47,13 +47,14 @@ class Cmdr(object):
 
     DEFAULT_WELCOME = u"""\nCmdr - Let's get started!\n"""
     DEFAULT_EXIT = u"""\nBye!"""
+    DEFAULT_PROMPT = u"->"    
 
     def __init__(self, app_name, registered_commands=None, intro_msg=None,
                  exit_msg=None, prompt_str=None):
 
         self.logger = logging.getLogger(self.__class__.__name__)
         # The default prompt string
-        self.prompt = "-> "
+        self.prompt = self.DEFAULT_PROMPT
         if prompt_str:
             self.prompt = prompt_str
 

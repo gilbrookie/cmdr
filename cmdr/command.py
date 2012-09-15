@@ -88,8 +88,6 @@ class Command(object):
 
         self.logger = logging.getLogger(self.__class__.__name__)
 
-        self.subcmds = {}
-        
         # In cases where Commands are created directly (cmdr.cmd generator, or
         # user generated, we need to check if a command string is actually two 
         # commands.
@@ -101,6 +99,7 @@ class Command(object):
 
         # **NOTE: currently only supports one level of sub command
         if cmd:
+            self.subcmds = {}
             parts = cmd.split()
             
             self.exec_func = exec_func if exec_func else self.execute
