@@ -78,11 +78,13 @@ class Cmdr(object):
 
         self.exit_condition = False
 
-        if not intro_msg:
-            self.welcome_msg = self.DEFAULT_WELCOME
+        self.welcome_msg = self.DEFAULT_WELCOME
+        if intro_msg:
+            self.welcome_msg = intro_msg
 
-        if not exit_msg:
-            self.exit_msg = self.DEFAULT_EXIT
+        self.exit_msg = self.DEFAULT_EXIT
+        if exit_msg:
+            self.exit_msg = exit_msg
 
         self.current_candidates = []
 

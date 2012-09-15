@@ -139,7 +139,7 @@ Misc project requirements  **IN PROGRESS**
 #. Passes pep8 and pyflakes **Done**
 #. Must execute on Python 2.6 and python 2.7 **In progress**
 #. Basic level of documentation
-#. Basic level of unittests **In progress**
+#. Basic level of unittests **Done**
 #. finalize package name  (cmdr has been chosenas package name!) **Done**
 #. need setup.py and Makefile (for basic testing/docs/setup) **Done**
 #. register and publish to pypi
