@@ -9,6 +9,7 @@ This module implements the main Cmdr class and supported functions.
 
 import readline
 import logging
+import sys
 
 from cmdr import Command
 
@@ -45,9 +46,9 @@ class Cmdr(object):
 
     """
 
-    DEFAULT_WELCOME = u"""\nCmdr - Let's get started!\n"""
-    DEFAULT_EXIT = u"""\nBye!"""
-    DEFAULT_PROMPT = u"->"    
+    DEFAULT_WELCOME = "\nCmdr - Let's get started!\n"
+    DEFAULT_EXIT = "\nBye!"
+    DEFAULT_PROMPT = "->"    
 
     def __init__(self, app_name, registered_commands=None, intro_msg=None,
                  exit_msg=None, prompt_str=None):
@@ -93,7 +94,8 @@ class Cmdr(object):
         commands must be registered with the application prior to calling start."""
 
         # Show the welcome message up front.
-        print self.welcome_msg
+        sys.stdout.write(self.welcome_msg)
+        sys.stdout.write("\n")
 
         # set up the command completion code - so we can do "TAB" completion.
         self.rl_completer = readline.get_completer()
@@ -114,6 +116,8 @@ class Cmdr(object):
                     self._show_cmds()
                 elif cmd == "exit" or cmd == "q":
                     self.exit_condition = True
+                elif cmd == "":
+                    continue
                 else:
                     # then, execute
                     self._exec_cmd(cmd)
@@ -124,11 +128,12 @@ class Cmdr(object):
 
             # Catch cases where an invalid command was entered
             except CommandNotFound, ex:
-                print ex
-
+                sys.stderr.write(ex)
+                sys.stderr.write("\n")
             # Some debugging exceptions (TODO: Remove once intial dev work complete)
             except TypeError, ex:
-                print "TypeError:%s" % ex
+                sys.stderr.write("TypeError:%s" % ex)
+                sys.stderr.write("\n")
 
             # blanket execption catch-all - so we can print an approptiate message
             # without killing the running process.
@@ -139,7 +144,8 @@ class Cmdr(object):
         readline.set_completer(self.rl_completer)
 
         # Show the exit message
-        print self.exit_msg
+        sys.stdout.write(self.exit_msg)
+        sys.stdout.write("\n")
 
     def _exec_cmd(self, cmd):
         (fn, args) = self._lookup_cmd(cmd.split())
@@ -201,7 +207,8 @@ class Cmdr(object):
             self.complete_dict[cmd.name] = [c for c in cmd.subcmds]
 
         else:
-            print "expecting a Command object"
+            sys.stderr.write("expecting a Command object")
+            sys.stderr.write("\n")
 
     def cmd(self, cmd_name, alt=None):
         """A function decorator that registers the function as a command within
@@ -250,7 +257,8 @@ class Cmdr(object):
 
     def _show_cmds(self):
         for cmd in self.registered_cmds:
-            print "\t%s\t\t%s" % (cmd.name, cmd.description)
+            sys.stdout.write("\t%s\t\t%s" % (cmd.name, cmd.description))
+            sys.stdout.write("\n")
 
     def exit(self):
         self.exit_condition = True

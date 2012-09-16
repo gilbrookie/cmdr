@@ -9,7 +9,7 @@ functionality required the register commands with the Application and allow
 them to be executed.
 """
 import logging
-
+import sys
 
 class CmdMetaclass(type):
     def __new__(cls, name, bases, attrs):
@@ -166,7 +166,7 @@ class Command(object):
         self.logger.info("'%s' execute()" % self.name)
 
         #print "No action to perform for %s" % cmd
-        print "No action to perform"
+        return "No action to perform"
 
 
 def subcmd(f):
