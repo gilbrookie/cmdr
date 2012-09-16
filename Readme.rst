@@ -13,10 +13,28 @@ simple views. It was really easy to get something up and running.
 When I wanted to build a cli backend of the web application, I thought it would be
 interesting to try and apply a similar design to how I built the command list.
 
-Usage
------
+Installing cmdr
+===============
 
-Here is a simple example:
+Clone the source to a local directory
+
+::
+
+    git clone https://github.com/jamesgilbrook/cmdr
+
+Then use the setup.py file to install it
+
+::
+
+    python setup.py install
+
+**TODO** 
+Add to pypi.
+
+Getting Started!
+================
+
+Here is a simple example to get yoru started:
 
 ::
 
@@ -39,6 +57,12 @@ Here is a simple example:
     Hello!
     ...
     
+In this example, you have the three main interfaces of cmdr
+
+#. Creating an app (instantiate a *Cmdr* class)
+#. Defining and registering a command with your app
+#. Starting the command interpreter (using *Cmdr.start()*)
+
 
 Advanced Usage
 ==============
