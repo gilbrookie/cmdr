@@ -46,7 +46,7 @@ class Cmdr(object):
 
     """
 
-    DEFAULT_WELCOME = "\nCmdr - Let's get started!\n"
+    DEFAULT_WELCOME = "\nWelcome to %s - Let's get started!\n"
     DEFAULT_EXIT = "\nBye!"
     DEFAULT_PROMPT = "->"    
 
@@ -79,7 +79,7 @@ class Cmdr(object):
 
         self.exit_condition = False
 
-        self.welcome_msg = self.DEFAULT_WELCOME
+        self.welcome_msg = self.DEFAULT_WELCOME % self.app_name
         if intro_msg:
             self.welcome_msg = intro_msg
 
