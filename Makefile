@@ -31,5 +31,6 @@ uninstall:
 
 sphinx-docs:
 		cd docs; make dirhtml
+		python -m webbrowser -n "file://${PWD}/docs/_build/html/index.html"
 # Generate sphinx documentation
 docs: sphinx-docs
