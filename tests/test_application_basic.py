@@ -25,7 +25,8 @@ class TestCmdrDefaultAttrs(unittest.TestCase):
         self.assertEqual(self.app.prompt, self.data['prompt'])
 
     def test_intro_msg(self):
-        self.assertEqual(self.app.welcome_msg, self.data['intro_msg'])
+        self.assertEqual(self.app.welcome_msg,
+                         self.data['intro_msg'] % self.__class__.__name__)
 
     def test_exit_msg(self):
         self.assertEqual(self.app.exit_msg, self.data['exit_msg'])
