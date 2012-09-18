@@ -9,7 +9,7 @@ functionality required the register commands with the Application and allow
 them to be executed.
 """
 import logging
-import sys
+
 
 class CmdMetaclass(type):
     def __new__(cls, name, bases, attrs):
@@ -89,19 +89,19 @@ class Command(object):
         self.logger = logging.getLogger(self.__class__.__name__)
 
         # In cases where Commands are created directly (cmdr.cmd generator, or
-        # user generated, we need to check if a command string is actually two 
+        # user generated, we need to check if a command string is actually two
         # commands.
 
-        # if the cmd can be split into two or more words (has a space in it) we 
-        # take the first part as the primary command and the second part as a 
-        # subcommand. In this case the primary command's exec_func needs to be 
+        # if the cmd can be split into two or more words (has a space in it) we
+        # take the first part as the primary command and the second part as a
+        # subcommand. In this case the primary command's exec_func needs to be
         # the default execute(), and the exec_func assigned to the subcmd.
 
         # **NOTE: currently only supports one level of sub command
         if cmd:
             self.subcmds = {}
             parts = cmd.split()
-            
+
             self.exec_func = exec_func if exec_func else self.execute
 
             # We have a subcmd
@@ -112,7 +112,7 @@ class Command(object):
                     self.exec_func = self.execute
                 else:
                     self.exec_func = self.sub_exec = self.execute
-                        
+
                 # assign accordingly
                 self.name = parts[0]
                 self.subcmds[parts[1]] = {'help': description,
@@ -128,7 +128,7 @@ class Command(object):
 
         self.description = description
         if not description:
-            self.description = self.__doc__ 
+            self.description = self.__doc__
 
         self.alt = alt
         self.completion_dict = None
@@ -159,7 +159,7 @@ class Command(object):
         created.
 
         When execute is called, it is given the full command (incl subcmds) as well
-        as the provided arguments.  It is up to the execution method to ensure 
+        as the provided arguments.  It is up to the execution method to ensure
         that the arguments are correct.
 
         """

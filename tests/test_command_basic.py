@@ -1,28 +1,32 @@
 import unittest
 import cmdr
 
-## Test Data  ##
 
+## Test Data  ##
 #Test callback functions
 def func_w_args(*args):
     pass
 
+
 def func_no_args():
     pass
+
 
 #Test Command subclasses
 class TestCmd1(cmdr.Command):
     """TestCmd1 help str"""
     pass
 
+
 class TestCmd2(cmdr.Command):
     """TestCmd2 help str"""
     def execute(self, *args):
         return "override execute"
 
+
 class TestCmd3(cmdr.Command):
     """TestCmd3 help str"""
-    
+
     @cmdr.subcmd
     def sub1(self, *args):
         """Test sub1"""
@@ -32,6 +36,7 @@ class TestCmd3(cmdr.Command):
     def sub2(self):
         """Test sub2"""
         pass
+
 
 class TestCmd4(cmdr.Command):
     @cmdr.subcmd
@@ -48,9 +53,9 @@ class TestCmd4(cmdr.Command):
 
 class TestCommandBasic(unittest.TestCase):
     def load_data(self):
-        self.data={}
+        self.data = {}
         self.data['name'] = self.__class__.__name__
-        self.data['alt']= u'alt'
+        self.data['alt'] = u'alt'
         self.data['exec_func'] = func_w_args
         self.data['description'] = u"Test description"
 
@@ -67,7 +72,7 @@ class TestCommandBasic(unittest.TestCase):
     #def test_args(self):
     #    self.assertEqual(self.cmd.alt, self.data['alt'])
 
-    def test_cmd_name(self):   
+    def test_cmd_name(self):
         self.assertEqual(self.cmd.name, self.data['name'])
 
     def test_cmd_description(self):
@@ -95,7 +100,7 @@ class TestCommandBasic(unittest.TestCase):
         self.assertEqual([self.data['name']],
                          self.cmd.cmd_strs)
 
-        
+
 class TestDirectCommand(unittest.TestCase):
     def setUp(self):
         self.cmd1 = cmdr.Command(cmd="Test")
@@ -115,7 +120,7 @@ class TestDirectCommand(unittest.TestCase):
         self.assertEqual("Test", self.cmd2.name)
         self.assertEqual("Test", self.cmd3.name)
         self.assertEqual("Test", self.cmd4.name)
-    
+
     def test_subcmd_name(self):
         self.assertEqual({}, self.cmd1.subcmds)
         self.assertIn("sub", self.cmd2.subcmds)
@@ -154,7 +159,7 @@ class TestSubclassCommand(unittest.TestCase):
     def test_description(self):
         self.assertEqual("TestCmd1 help str", self.cmd1.description)
         self.assertEqual("TestCmd2 help str", self.cmd2.description)
-    
+
     def test_cmd_dict(self):
         pass
 
@@ -182,13 +187,13 @@ class TestSubclassWithSubCmds(unittest.TestCase):
         # the case for cmd1 covered in TestCommandBasic
         self.assertEqual("testcmd3", self.cmd1.name)
         self.assertEqual("testcmd4", self.cmd2.name)
-    
+
     def test_description(self):
         self.assertEqual("TestCmd3 help str", self.cmd1.description)
         self.assertEqual(None, self.cmd2.description)
-    
+
     def test_cmd_strs(self):
-        self.assertEqual(["testcmd3 sub2", "testcmd3 sub1"], 
+        self.assertEqual(["testcmd3 sub2", "testcmd3 sub1"],
                          self.cmd1.cmd_strs)
         self.assertEqual(["testcmd4 sub1"], self.cmd2.cmd_strs)
 

@@ -18,7 +18,7 @@ test:
 
 # run flake8 (pep8 + pyflakes) on tests and source only
 pep8:
-		flake8 --max-line-length=85 --exclude=*.pyc,*.git,*.rst tests/ cmdr/
+		flake8 --max-line-length=85 --ignore=W402 --exclude=*.pyc,*.git,*.rst --exit-zero tests/ cmdr/
 
 # Build the readme locally
 readme:

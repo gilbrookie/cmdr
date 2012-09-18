@@ -48,7 +48,7 @@ class Cmdr(object):
 
     DEFAULT_WELCOME = "\nWelcome to %s - Let's get started!\n"
     DEFAULT_EXIT = "\nBye!"
-    DEFAULT_PROMPT = "->"    
+    DEFAULT_PROMPT = "->"
 
     def __init__(self, app_name, registered_commands=None, intro_msg=None,
                  exit_msg=None, prompt_str=None):
@@ -66,9 +66,11 @@ class Cmdr(object):
 
         # Add the default registered commands (help, exit)
         self.builtin_cmds = [
-            Command(cmd='help', description="Shows this menu", exec_func=self._show_cmds()),
-            Command(cmd='exit', description="Exits the app", exec_func=self.exit())]
-        
+            Command(cmd='help', description="Shows this menu",
+                    exec_func=self._show_cmds()),
+            Command(cmd='exit', description="Exits the app",
+                    exec_func=self.exit())]
+
         for cmd in self.builtin_cmds:
             self.register_cmd(cmd)
 
@@ -111,7 +113,7 @@ class Cmdr(object):
             try:
                 # read in the text input from cli
                 cmd = raw_input(self.prompt)
-                
+
                 if cmd == 'help' or cmd == "?":
                     self._show_cmds()
                 elif cmd == "exit" or cmd == "q":
@@ -238,8 +240,8 @@ class Cmdr(object):
         """
 
         def decorator(f):
-            self.logger.info("Registering new command '%s', func=%s" % 
-                            (cmd_name, f))
+            self.logger.info("Registering new command '%s', func=%s" %
+                             (cmd_name, f))
             # If the function does not have a docstring, override the __doc__ to
             # ensure that the Command base class's docstring is not shown.
             if not f.__doc__:
