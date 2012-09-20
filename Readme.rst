@@ -1,7 +1,7 @@
 cmdr - A line based command interpreter framework/tool
 ======================================================
 .. image:: https://secure.travis-ci.org/jamesgilbrook/cmdr.png?branch=develop
-    :target: https://secure.travis-ci.org/jamesgilbrook/cmdr.png
+    :target: http://travis-ci.org/#!/jamesgilbrook/cmdr
 
 
 What is it?
@@ -172,7 +172,7 @@ Misc project requirements  **IN PROGRESS**
 #. register and publish to pypi
 
 
-**Target rev1 version is 0.1.**
+**Target rev1 version is 0.1. ETA: Oct 2012**
 
 
 Post rev1 feature ideas (in no order)
