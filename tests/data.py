@@ -12,6 +12,7 @@ This includes:
 
 import cmdr
 
+
 def func_w_args(*args):
     pass
 
@@ -55,29 +56,29 @@ class TestCmd4(cmdr.Command):
         pass
 
 
-
 ### Cmdr Instances ###
-
 CmdrSimple = cmdr.Cmdr("CmdrSimple")
-CmdrOverrideParams = cmdr.Cmdr("CmdrOverrideParams", 
+CmdrOverrideParams = cmdr.Cmdr("CmdrOverrideParams",
                                intro_msg="Override Welcome Message",
                                exit_msg="Override Exit Message",
                                prompt_str="$>")
 
 CmdrBasicCmds = cmdr.Cmdr("CmdrBasicCmds")
-CmdrBasicCmds.register_cmd(TestCmd1)
-CmdrBasicCmds.register_cmd(TestCmd2)
-
+CmdrBasicCmds.register_cmd(TestCmd1())
+CmdrBasicCmds.register_cmd(TestCmd2())
 
 CmdrSubCmds = cmdr.Cmdr("CmdrSubCmds")
-CmdrBasicCmds.register_cmd(TestCmd3)
-CmdrBasicCmds.register_cmd(TestCmd4)
+CmdrBasicCmds.register_cmd(TestCmd3())
+CmdrBasicCmds.register_cmd(TestCmd4())
 
 # Use decorated commands (app name is short for convenience.
 app = cmdr.Cmdr("CmdrDecoratedCmds")
+
+
 @app.cmd
 def decorated_no_args():
     return "decorated_no_args"
+
 
 @app.cmd
 def decorated_w_args(args):
@@ -86,6 +87,3 @@ def decorated_w_args(args):
 # rename the app to a more descriptive name
 CmdrDecoratedCmds = app
 del app
-
-
-

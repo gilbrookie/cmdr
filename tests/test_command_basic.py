@@ -1,11 +1,11 @@
 import unittest
 import cmdr
-from data import (func_w_args, 
-                   func_no_args,
-                   TestCmd1,
-                   TestCmd2,
-                   TestCmd3,
-                   TestCmd4)
+from data import (func_w_args,
+                  func_no_args,
+                  TestCmd1,
+                  TestCmd2,
+                  TestCmd3,
+                  TestCmd4)
 
 
 class TestCommandBasic(unittest.TestCase):

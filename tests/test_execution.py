@@ -1,5 +1,4 @@
 import os
-import subprocess
 import unittest
 
 import pexpect
@@ -11,7 +10,7 @@ APP1 = os.path.join(os.getcwd(), "app1.py")
 
 class CLICommon(object):
     """
-    CLICommon is a helper class that spawns the test apps and allows 
+    CLICommon is a helper class that spawns the test apps and allows
     interaction between the app and the test cases
 
     Uses pexpect to search for responses from commands
@@ -19,7 +18,7 @@ class CLICommon(object):
     Special cases:
 
     #. welcome message - this can only be read once (at the start of the script)
-        so it is done automatically on __init__ and store as :attr:`welcome` 
+        so it is done automatically on __init__ and store as :attr:`welcome`
         attribute
 
     #. exit - In this case the regex used for the regular commmand breaks because
@@ -33,7 +32,7 @@ class CLICommon(object):
         self.prompt = prompt_str
         self.ex_str = "(.*?)%s" % self.prompt
 
-        # we can only read the welcome message once, so do it 
+        # we can only read the welcome message once, so do it
         # immediately after spawning the process
         self.welcome = self._read_welcome()
 
@@ -75,6 +74,7 @@ class TestCmdrExec(unittest.TestCase):
         #self.app.terminate()
         pass
 
+
 class TestCmdrWelcome(unittest.TestCase):
 
     def test_default_welcome(self):
@@ -83,12 +83,14 @@ class TestCmdrWelcome(unittest.TestCase):
     def test_override_welcome(self):
         pass
 
+
 class TestCmdrExit(unittest.TestCase):
     def test_default_exit(self):
         pass
 
     def test_override_exit(self):
         pass
+
 
 class TestHelpCmd(unittest.TestCase):
     def test_only_builtins(self):
@@ -111,11 +113,10 @@ class TestSimpleCmds(unittest.TestCase):
     def test_subcmd_w_args(self):
         pass
 
+
 class TestCmdErrors(unittest.TestCase):
     def test_unknown_cmd(self):
         pass
 
     def test_args_mismatch(self):
         pass
-
-
