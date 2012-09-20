@@ -1,7 +1,7 @@
 cmdr - A line based command interpreter framework/tool
 ======================================================
 .. image:: https://secure.travis-ci.org/jamesgilbrook/cmdr.png?branch=develop
-    :target: https://secure.travis-ci.org/jamesgilbrook/cmdr.png
+    :target: http://travis-ci.org/#!/jamesgilbrook/cmdr
 
 
 What is it?
