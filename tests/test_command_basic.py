@@ -1,61 +1,17 @@
 import unittest
 import cmdr
+from data import (func_w_args,
+                  func_no_args,
+                  TestCmd1,
+                  TestCmd2,
+                  TestCmd3,
+                  TestCmd4)
 
-
-## Test Data  ##
-#Test callback functions
-def func_w_args(*args):
-    pass
-
-
-def func_no_args():
-    pass
-
-
-#Test Command subclasses
-class TestCmd1(cmdr.Command):
-    """TestCmd1 help str"""
-    pass
-
-
-class TestCmd2(cmdr.Command):
-    """TestCmd2 help str"""
-    def execute(self, *args):
-        return "override execute"
-
-
-class TestCmd3(cmdr.Command):
-    """TestCmd3 help str"""
-
-    @cmdr.subcmd
-    def sub1(self, *args):
-        """Test sub1"""
-        pass
-
-    @cmdr.subcmd
-    def sub2(self):
-        """Test sub2"""
-        pass
-
-
-class TestCmd4(cmdr.Command):
-    @cmdr.subcmd
-    def sub1(self):
-        pass
-
-    def execute(self):
-        pass
-
-## End Test Data ##
-
-
-## Test Classes ##
 
 class TestCommandBasic(unittest.TestCase):
     def load_data(self):
         self.data = {}
         self.data['name'] = self.__class__.__name__
-        self.data['alt'] = u'alt'
         self.data['exec_func'] = func_w_args
         self.data['description'] = u"Test description"
 
@@ -68,9 +24,6 @@ class TestCommandBasic(unittest.TestCase):
 
     def tearDown(self):
         self.cmd = None
-
-    #def test_args(self):
-    #    self.assertEqual(self.cmd.alt, self.data['alt'])
 
     def test_cmd_name(self):
         self.assertEqual(self.cmd.name, self.data['name'])
