@@ -130,7 +130,7 @@ class Cmdr(object):
 
             # Catch cases where an invalid command was entered
             except CommandNotFound, ex:
-                sys.stderr.write(ex)
+                sys.stderr.write("Command not found: %s" % cmd)
                 sys.stderr.write("\n")
             # Some debugging exceptions (TODO: Remove once intial dev work complete)
             except TypeError, ex:
