@@ -12,6 +12,7 @@ class TestCommandBasic(unittest.TestCase):
     def load_data(self):
         self.data = {}
         self.data['name'] = self.__class__.__name__
+        self.data['alt'] = "alt"
         self.data['exec_func'] = func_w_args
         self.data['description'] = u"Test description"
 
