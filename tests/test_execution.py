@@ -8,7 +8,7 @@ import data
 PYTHON = "python"
 APP1 = os.path.join(os.getcwd(), "tests/app1.py")
 APP2 = os.path.join(os.getcwd(), "tests/app2.py")
-#APP1 = "app1.py"
+APP3 = os.path.join(os.getcwd(), "tests/app3.py")
 
 
 class CLICommon(object):
@@ -16,7 +16,7 @@ class CLICommon(object):
     CLICommon is a helper class that spawns the test apps and allows
     interaction between the app and the test cases
 
-    Uses pexpect to search for responses from commands
+    Uses pexpect to handle spawning and interacting with the processes
 
     Special cases:
 
@@ -34,9 +34,9 @@ class CLICommon(object):
         self.child = pexpect.spawn("python %s" % mod)
         self.prompt = prompt_str
         self.ex_str = "(.*?)%s" % self.prompt
-        
+
         if not self.child.isalive:
-            raise Exception("Problem starting child process") 
+            raise Exception("Problem starting child process")
 
         # we can only read the welcome message once, so do it
         # immediately after spawning the process
@@ -76,12 +76,12 @@ class TestCmdrWelcome(unittest.TestCase):
         app = CLICommon(APP1, "->")
         self.assertEqual(app.welcome.replace("\r\n", ""),
                          data.CmdrSimple.welcome_msg.replace("\n", ""))
-        
+
         app.terminate()
         del app
 
     def test_override_welcome(self):
-        app = CLICommon(APP2,">>>") 
+        app = CLICommon(APP2, ">>>")
         self.assertEqual(app.welcome.replace("\r\n", ""),
                          data.CmdrOverrideParams.welcome_msg.replace("\n", ""))
 
@@ -90,32 +90,42 @@ class TestCmdrWelcome(unittest.TestCase):
 
 
 class TestCmdrExit(unittest.TestCase):
+
     def test_default_exit(self):
         app = CLICommon(APP1, "->")
         self.assertEqual(app.send_exit().replace("\r\n", ""),
                          data.CmdrSimple.exit_msg.replace("\n", ""))
-        
+
         app.terminate()
         del app
 
     def test_override_exit(self):
-        app = CLICommon(APP2,">>>") 
+        app = CLICommon(APP2, ">>>")
         self.assertEqual(app.send_exit().replace("\r\n", ""),
                          data.CmdrOverrideParams.exit_msg.replace("\n", ""))
-        
+
         app.terminate()
         del app
 
+    def test_exit_shortcut(self):
+        pass
+
+    def test_ctrl_c_exit(self):
+        pass
+
+    def test_ctrl_d_exit(self):
+        pass
+
 
 class TestHelpCmd(unittest.TestCase):
+
     def setUp(self):
         self.pattern = re.compile(r"^\s+(\w+)\s+([ \w]+)\s",
-                                  re.MULTILINE|re.DOTALL)
+                                  re.MULTILINE | re.DOTALL)
 
     def test_only_builtins(self):
         app = CLICommon(APP1, "->")
-        help_str = app.send("help") 
-        print help_str
+        help_str = app.send("help")
 
         res = self.pattern.findall(help_str)
         if not res:
@@ -127,26 +137,85 @@ class TestHelpCmd(unittest.TestCase):
 
         self.assertEqual(res[0], ("help", "Shows this menu"))
         self.assertEqual(res[1], ("exit", "Exits the app"))
-    
+
         app.terminate()
         del app
 
     def test_registered_commands(self):
+        app = CLICommon(APP2, ">>>")
+        help_str = app.send("help")
+
+        res = self.pattern.findall(help_str)
+        if not res:
+            self.fail("Failed to match help string")
+        else:
+            print res
+
+        self.assertEqual(len(res), 4)
+
+        self.assertEqual(res[0], ("help", "Shows this menu"))
+        self.assertEqual(res[1], ("exit", "Exits the app"))
+        self.assertEqual(res[2], ("testcmd1", "TestCmd1 help str"))
+        self.assertEqual(res[3], ("testcmd2", "TestCmd2 help str"))
+
+        app.terminate()
+        del app
+
+    def test_registered_subcmds(self):
+        app = CLICommon(APP3, "->")
+        help_str = app.send("help")
+
+        res = self.pattern.findall(help_str)
+        if not res:
+            self.fail("Failed to match help string")
+        else:
+            print res
+
+        self.assertEqual(len(res), 6)
+
+        self.assertEqual(res[0], ("help", "Shows this menu"))
+        self.assertEqual(res[1], ("exit", "Exits the app"))
+        self.assertEqual(res[2],
+                         ("no_args", "Decorated command with no arguments"))
+        self.assertEqual(res[3],
+                         ("with_args", "Decorated command with arguments"))
+        self.assertEqual(res[4], ("testcmd3", "TestCmd3 help str"))
+        self.assertEqual(res[5], ("testcmd4", "None"))
+
+        app.terminate()
+        del app
+
+    def test_help_shortcut(self):
         pass
 
 
 class TestSimpleCmds(unittest.TestCase):
+
+    def setUp(self):
+        self.app = CLICommon(APP3, "->")
+
+    def tearDown(self):
+        self.app.terminate()
+
     def test_single_cmd_no_args(self):
-        pass
+        res = self.app.send("no_args")
+        self.assertEqual(re.findall("decorated_no_args", res)[0],
+                         "decorated_no_args")
 
     def test_single_cmd_w_args(self):
-        pass
+        res = self.app.send("with_args 1")
+        self.assertEqual(re.findall("decorated_w_args 1", res)[0],
+                         "decorated_w_args 1")
 
     def test_subcmd_no_args(self):
-        pass
+        res = self.app.send("testcmd3 sub2")
+        self.assertEqual(re.findall("Test sub2", res)[0],
+                         "Test sub2")
 
     def test_subcmd_w_args(self):
-        pass
+        res = self.app.send("testcmd3 sub1 1")
+        self.assertEqual(re.findall("Test sub1 1", res)[0],
+                         "Test sub1 1")
 
 
 class TestCmdErrors(unittest.TestCase):

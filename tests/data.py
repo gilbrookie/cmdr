@@ -39,12 +39,12 @@ class TestCmd3(cmdr.Command):
     @cmdr.subcmd
     def sub1(self, *args):
         """Test sub1"""
-        pass
+        print "Test sub1 %s" % " ".join(*args)
 
     @cmdr.subcmd
     def sub2(self):
         """Test sub2"""
-        pass
+        print "Test sub2"
 
 
 class TestCmd4(cmdr.Command):
@@ -75,14 +75,16 @@ CmdrBasicCmds.register_cmd(TestCmd4())
 app = cmdr.Cmdr("CmdrDecoratedCmds")
 
 
-@app.cmd
+@app.cmd('no_args')
 def decorated_no_args():
-    return "decorated_no_args"
+    """Decorated command with no arguments"""
+    print "decorated_no_args"
 
 
-@app.cmd
-def decorated_w_args(args):
-    return "decorated_w_args"
+@app.cmd('with_args')
+def decorated_w_args(*args):
+    """Decorated command with arguments"""
+    print "decorated_w_args %s" % ",".join(args)
 
 # rename the app to a more descriptive name
 CmdrDecoratedCmds = app
