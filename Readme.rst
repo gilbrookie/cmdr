@@ -44,7 +44,7 @@ Here is a simple example to get yoru started:
     from cmdr import Cmdr
 
     # Create an application (give it the name of the current module)
-    app = Cmdr(__name__):
+    app = Cmdr("TestApp"):
 
     # Define simple command using a decorator, the argument passed in is the name of the command
     @app.cmd("hello")
@@ -54,11 +54,18 @@ Here is a simple example to get yoru started:
     # Start the interpreter loop
     app.start()
 
-    # you'll get a prompt, and when you enter "hello" the say_hello() function is called.
-    ...
-    >hello
+    # Save the content in app.py and run it from your command line
+    # On launch, you'll get a prompt and when you enter "hello" the say_hello() function is called.
+
+    $ python app.py
+
+    Welcome to TestApp - Let's get started
+    
+    ->hello
     Hello!
-    ...
+    ->exit
+    bye!
+
     
 In this example, you have the three main interfaces of cmdr
 
@@ -66,78 +73,20 @@ In this example, you have the three main interfaces of cmdr
 #. Defining and registering a command with your app
 #. Starting the command interpreter (using *Cmdr.start()*)
 
+Full Documentation
+==================
+Full documentation is included with the source code, and can be built and viewed with a simple make command::
 
-Advanced Usage
-==============
+    make docs
 
-Designing Commands
-------------------
-
-There are three ways to develop commands for the cmdr application
-
-Method 1: Creating a Command object with some arguments
--------------------------------------------------------
-:: 
-
-    def echo1(*args):
-        print args
-
-    # Build a command directly
-    cmd = Command(name="echo1", desc="Sample", exec_func=echo1)
-
-Method 2: Subclassing Command - For greater control/flexibility
----------------------------------------------------------------
-::
-
-    # Subclass
-    class Echo2(Command):
-        """This docstring will show up as "help echo2" in the application"""
-
-        def execute(self, *args):
-            """This method will perform the echo functionality"""
-            print "echo2 %s" % " ".join(args)
+This will build the documentation as HTML locally and open a web browser to the home
+page.
 
 
-Method 3: Using the cmd decorator
----------------------------------
-::
+History
+=======
 
-    # Using function Decorator 
-    @app.cmd
-    def echo3(*args):
-        """This docstring will appear as help for the echo cmd"""
-        print "echo3 %s" % " ".join(args)
-
-Building the CLI application
-============================
-::
-
-    # Instatiate an Cmdr object, use the module __name__ to set the name of the app
-    app = cmdr.Cmdr(__name__)
-    
-    # Pass in a command that are available
-    app.register_cmd(cmd)
-    app.register_cmd(Echo2())
-    
-    # Start the app
-    app.start()
-
-A simple example of the app running:
-
-::
-    
-    cmdr Command Line Framework
-    Let's get started
-    
-    -> echo1 Test echo1
-    echo1 Test echo1
-    -> echo2 abc def
-    echo2 abc def
-    ->help echo2
-    This docstring will show up as "help echo2" in the application
-    ->exit
-    Bye!
-
+cmdr is still in development and not quite ready for prime time.
 
 
 Roadmap/Status
@@ -175,15 +124,7 @@ Misc project requirements  **IN PROGRESS**
 **Target rev1 version is 0.1. ETA: Oct 2012**
 
 
-Post rev1 feature ideas (in no order)
--------------------------------------
-* Add support for terminal colors
-* Improve argument parsing (I have some ideas, but nothing has been vetted)
-* Allow support for arbitrary level of command depth
-* Support sub command prompts (to expose levels of subcommands)
-* Execute in thread
-* Progess bar (maybe useful for long running commands)
-* Unicode support
-* Add subcmds as argument to Command. Are subcmds Command objects or dict?
+Issues/Feature Request
+======================
 
-
+All issues/features are being tracked in github `here <https://github.com/jamesgilbrook/cmdr/issues>`_

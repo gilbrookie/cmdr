@@ -50,6 +50,77 @@ In this example, you have the three main interfaces of cmdr
 #. Creating an app (instantiate a :class:`Cmdr` class)
 #. Defining and registering a command with your app
 #. Starting the command interpreter (using :meth:`Cmdr.start()`)
+Advanced Usage
+==============
+
+Designing Commands
+------------------
+
+There are three ways to develop commands for the cmdr application
+
+Method 1: Creating a Command object with some arguments
+-------------------------------------------------------
+:: 
+
+    def echo1(*args):
+        print args
+
+    # Build a command directly
+    cmd = Command(name="echo1", desc="Sample", exec_func=echo1)
+
+Method 2: Subclassing Command - For greater control/flexibility
+---------------------------------------------------------------
+::
+
+    # Subclass
+    class Echo2(Command):
+        """This docstring will show up as "help echo2" in the application"""
+
+        def execute(self, *args):
+            """This method will perform the echo functionality"""
+            print "echo2 %s" % " ".join(args)
+
+
+Method 3: Using the cmd decorator
+---------------------------------
+::
+
+    # Using function Decorator 
+    @app.cmd
+    def echo3(*args):
+        """This docstring will appear as help for the echo cmd"""
+        print "echo3 %s" % " ".join(args)
+
+Building the CLI application
+============================
+::
+
+    # Instatiate an Cmdr object, use the module __name__ to set the name of the app
+    app = cmdr.Cmdr(__name__)
+    
+    # Pass in a command that are available
+    app.register_cmd(cmd)
+    app.register_cmd(Echo2())
+    
+    # Start the app
+    app.start()
+
+A simple example of the app running:
+
+::
+    
+    cmdr Command Line Framework
+    Let's get started
+    
+    -> echo1 Test echo1
+    echo1 Test echo1
+    -> echo2 abc def
+    echo2 abc def
+    ->help echo2
+    This docstring will show up as "help echo2" in the application
+    ->exit
+    Bye!
+
 
 .. toctree::
    :maxdepth: 2
