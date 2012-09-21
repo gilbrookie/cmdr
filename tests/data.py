@@ -59,9 +59,9 @@ class TestCmd4(cmdr.Command):
 ### Cmdr Instances ###
 CmdrSimple = cmdr.Cmdr("CmdrSimple")
 CmdrOverrideParams = cmdr.Cmdr("CmdrOverrideParams",
-                               intro_msg="Override Welcome Message",
-                               exit_msg="Override Exit Message",
-                               prompt_str="$>")
+                               intro_msg="\nOverride Welcome Message\n",
+                               exit_msg="\nOverride Exit Message\n",
+                               prompt_str=">>>")
 
 CmdrBasicCmds = cmdr.Cmdr("CmdrBasicCmds")
 CmdrBasicCmds.register_cmd(TestCmd1())

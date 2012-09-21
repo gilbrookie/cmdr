@@ -1,10 +1,13 @@
 import os
+import pexpect
+import re
 import unittest
 
-import pexpect
+import data
 
 PYTHON = "python"
-APP1 = os.path.join(os.getcwd(), "app1.py")
+APP1 = os.path.join(os.getcwd(), "tests/app1.py")
+APP2 = os.path.join(os.getcwd(), "tests/app2.py")
 #APP1 = "app1.py"
 
 
@@ -31,28 +34,30 @@ class CLICommon(object):
         self.child = pexpect.spawn("python %s" % mod)
         self.prompt = prompt_str
         self.ex_str = "(.*?)%s" % self.prompt
+        
+        if not self.child.isalive:
+            raise Exception("Problem starting child process") 
 
         # we can only read the welcome message once, so do it
         # immediately after spawning the process
         self.welcome = self._read_welcome()
 
     def _read_welcome(self):
-        self.child.readline()
         self.child.expect(self.ex_str)
-        return self.child.match.group(0)
+        return self.child.match.group(0).rstrip(self.prompt)
 
     def send(self, s):
         self.child.sendline(s)
         self.child.expect(self.ex_str)
-        return self.child.match.group(0)
+        return self.child.match.group(0).rstrip(self.prompt)
 
     def send_exit(self):
         self.child.sendline("exit")
         self.child.expect(pexpect.EOF)
-        return self.child.before
+        return self.child.before.lstrip("exit")
 
     def terminate(self):
-        self.child.kill()
+        del self.child
 
 # This is a basic test function for the CLICommon class
 #def CLICommon_tester()
@@ -65,36 +70,66 @@ class CLICommon(object):
 ## Execution Test cases start here: ##
 
 
-class TestCmdrExec(unittest.TestCase):
-    def setUp(self):
-        #self.app = CLICommon(APP1, "->")
-        pass
-
-    def tearDown(self):
-        #self.app.terminate()
-        pass
-
-
 class TestCmdrWelcome(unittest.TestCase):
 
     def test_default_welcome(self):
-        pass
+        app = CLICommon(APP1, "->")
+        self.assertEqual(app.welcome.replace("\r\n", ""),
+                         data.CmdrSimple.welcome_msg.replace("\n", ""))
+        
+        app.terminate()
+        del app
 
     def test_override_welcome(self):
-        pass
+        app = CLICommon(APP2,">>>") 
+        self.assertEqual(app.welcome.replace("\r\n", ""),
+                         data.CmdrOverrideParams.welcome_msg.replace("\n", ""))
+
+        app.terminate()
+        del app
 
 
 class TestCmdrExit(unittest.TestCase):
     def test_default_exit(self):
-        pass
+        app = CLICommon(APP1, "->")
+        self.assertEqual(app.send_exit().replace("\r\n", ""),
+                         data.CmdrSimple.exit_msg.replace("\n", ""))
+        
+        app.terminate()
+        del app
 
     def test_override_exit(self):
-        pass
+        app = CLICommon(APP2,">>>") 
+        self.assertEqual(app.send_exit().replace("\r\n", ""),
+                         data.CmdrOverrideParams.exit_msg.replace("\n", ""))
+        
+        app.terminate()
+        del app
 
 
 class TestHelpCmd(unittest.TestCase):
+    def setUp(self):
+        self.pattern = re.compile(r"^\s+(\w+)\s+([ \w]+)\s",
+                                  re.MULTILINE|re.DOTALL)
+
     def test_only_builtins(self):
-        pass
+        app = CLICommon(APP1, "->")
+        help_str = app.send("help") 
+        print help_str
+
+        res = self.pattern.findall(help_str)
+        if not res:
+            self.fail("Failed to match help string")
+        else:
+            print res
+
+        self.assertEqual(len(res), 2)
+
+        self.assertEqual(res[0], ("help", "Shows this menu"))
+        self.assertEqual(res[1], ("exit", "Exits the app"))
+    
+        app.terminate()
+        del app
 
     def test_registered_commands(self):
         pass
