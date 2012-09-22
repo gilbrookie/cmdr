@@ -84,7 +84,8 @@ def decorated_no_args():
 @app.cmd('with_args')
 def decorated_w_args(*args):
     """Decorated command with arguments"""
-    print "decorated_w_args %s" % ",".join(args)
+
+    print "decorated_w_args %s" % ",".join(*args)
 
 # rename the app to a more descriptive name
 CmdrDecoratedCmds = app

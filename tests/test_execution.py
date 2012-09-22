@@ -111,13 +111,35 @@ class TestCmdrExit(unittest.TestCase):
         del app
 
     def test_exit_shortcut(self):
-        pass
+        app = CLICommon(APP1, "->")
+        child = app.child
+        child.sendline("q")
+        child.expect(pexpect.EOF)
+        res = child.before.lstrip("q")
+        self.assertEqual(res.replace("\r\n", ""), 
+                         data.CmdrSimple.exit_msg.replace("\n", ""))
 
     def test_ctrl_c_exit(self):
-        pass
+        app = CLICommon(APP1, "->")
+        child = app.child
+        child.sendcontrol("c")
+        child.expect(pexpect.EOF)
+        res = child.before.lstrip("q")
+        self.assertEqual(res.replace("\r\n", ""), 
+                         data.CmdrSimple.exit_msg.replace("\n", ""))
+        app.terminate()
+        del app
 
     def test_ctrl_d_exit(self):
-        pass
+        app = CLICommon(APP1, "->")
+        child = app.child
+        child.sendcontrol("d")
+        child.expect(pexpect.EOF)
+        res = child.before.lstrip("q")
+        self.assertEqual(res.replace("\r\n", ""), 
+                         data.CmdrSimple.exit_msg.replace("\n", ""))
+        app.terminate()
+        del app
 
 
 class TestHelpCmd(unittest.TestCase):
@@ -189,7 +211,22 @@ class TestHelpCmd(unittest.TestCase):
         del app
 
     def test_help_shortcut(self):
-        pass
+        app = CLICommon(APP1, "->")
+        help_str = app.send("?")
+
+        res = self.pattern.findall(help_str)
+        if not res:
+            self.fail("Failed to match help string")
+        else:
+            print res
+
+        self.assertEqual(len(res), 2)
+
+        self.assertEqual(res[0], ("help", "Shows this menu"))
+        self.assertEqual(res[1], ("exit", "Exits the app"))
+
+        app.terminate()
+        del app
 
 
 class TestSimpleCmds(unittest.TestCase):
@@ -207,6 +244,7 @@ class TestSimpleCmds(unittest.TestCase):
 
     def test_single_cmd_w_args(self):
         res = self.app.send("with_args 1")
+        print res
         self.assertEqual(re.findall("decorated_w_args 1", res)[0],
                          "decorated_w_args 1")
 
@@ -223,7 +261,10 @@ class TestSimpleCmds(unittest.TestCase):
 
 class TestCmdErrors(unittest.TestCase):
     def test_unknown_cmd(self):
-        pass
+        app = CLICommon(APP1, "->")
+        res = app.send("testcmd")
+        self.assertEqual(re.findall("Command not found: testcmd", res)[0],
+                         "Command not found: testcmd")
 
     def test_args_mismatch(self):
         pass

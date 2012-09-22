@@ -184,7 +184,7 @@ class Cmdr(object):
 
                     else:
                         ex_fn = cmd.exec_func
-                        args = key_list.pop(0)
+                        args = key_list
 
                 except IndexError:
                     # if no match is found
