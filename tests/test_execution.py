@@ -5,7 +5,10 @@ import unittest
 
 import data
 
+# Define the common python executable
 PYTHON = "python"
+
+# paths to the Cmdr applications
 APP1 = os.path.join(os.getcwd(), "tests/app1.py")
 APP2 = os.path.join(os.getcwd(), "tests/app2.py")
 APP3 = os.path.join(os.getcwd(), "tests/app3.py")
