@@ -23,8 +23,8 @@ class Cmdr(object):
     primary entry point for applications.
 
     It is passed the name of the application as it's only required argument.
-    Optionally, a list of Command objects may be passed in, as well you can override
-    the intro and exit messages.
+    Optionally, a list of Command objects may be passed in, as well parameters that
+    can override the prompt, intro and exit messages.
 
     The Cmdr class keeps track of the available commands through a
     registration system.  Users of the Cmdr class can provide the commands at
@@ -34,15 +34,16 @@ class Cmdr(object):
     The Cmdr provides two built-in commands; exit and help.
 
     For the commands that are registered, the application will try to provide basic
-    tab completion and maintains a history of previously entered commands.
+    tab completion and maintains a history of previously entered commands for the 
+    current session.
 
-    :param: app_name: the name of the application
-    :param: registered_commands: can be used to set the list of registered commands
+    :param app_name: the name of the application
+    :param registered_commands: can be used to set the list of registered commands
                                  as creation time.  Defaults to None.
-    :param: intro_msg: the introduction message printed by the Cmdr class
-    :param: exit_msg: the exit message printed by the Cmdr class when the it
+    :param intro_msg: the introduction message printed by the Cmdr class
+    :param exit_msg: the exit message printed by the Cmdr class when the it
                         is terminated.
-
+    :param prompt_str: the characters used for the prompt
 
     """
 
@@ -61,15 +62,22 @@ class Cmdr(object):
 
         self.app_name = app_name
 
+        # data stored for the registered commands
         self.complete_dict = {}
         self.registered_cmds = []
+
+        # a list used for code completion
+        self.current_candidates = []
+        
+        # flag used to trigger the application to close
+        self.exit_condition = False
 
         # Add the default registered commands (help, exit)
         self.builtin_cmds = [
             Command(cmd='help', description="Shows this menu",
-                    exec_func=self._show_cmds()),
+                    exec_func=self._show_cmds),
             Command(cmd='exit', description="Exits the app",
-                    exec_func=self.exit())]
+                    exec_func=self.exit)]
 
         for cmd in self.builtin_cmds:
             self.register_cmd(cmd)
@@ -79,8 +87,6 @@ class Cmdr(object):
             for cmd in registered_commands:
                 self.register_cmd(cmd)
 
-        self.exit_condition = False
-
         self.welcome_msg = self.DEFAULT_WELCOME % self.app_name
         if intro_msg:
             self.welcome_msg = intro_msg
@@ -89,8 +95,6 @@ class Cmdr(object):
         if exit_msg:
             self.exit_msg = exit_msg
 
-        self.current_candidates = []
-
     def start(self):
         """Instructs the Cmdr class to start the command line interreter.  All
         commands must be registered with the application prior to calling start."""
@@ -98,15 +102,16 @@ class Cmdr(object):
         # Show the welcome message up front.
         sys.stdout.write(self.welcome_msg)
         sys.stdout.write("\n")
-
-        # set up the command completion code - so we can do "TAB" completion.
+       
+        # make backup of the current completer function
         self.rl_completer = readline.get_completer()
 
-        # Configure the function that perform the command lookup (thus completion)
+        # set up the command completion code - so we can do "TAB" completion.
+        # Configure the function that performs the command lookup and completion
         readline.set_completer(self._complete_cmd)
         readline.parse_and_bind("tab: complete")
 
-        # The main loop uses an flag to determine when it needs to exit.
+        # The main loop uses a flag to determine when it needs to exit.
         # Run until the flag is set.
         while not self.exit_condition:
 
@@ -114,9 +119,10 @@ class Cmdr(object):
                 # read in the text input from cli
                 cmd = raw_input(self.prompt)
 
-                if cmd == 'help' or cmd == "?":
+                # Check for specific builtin shortcuts
+                if cmd == "?":
                     self._show_cmds()
-                elif cmd == "exit" or cmd == "q":
+                elif cmd == "q":
                     self.exit_condition = True
                 elif cmd == "":
                     continue
@@ -130,11 +136,11 @@ class Cmdr(object):
 
             # Catch cases where an invalid command was entered
             except CommandNotFound, ex:
-                sys.stderr.write("Command not found: %s" % cmd)
+                sys.stderr.write(str(ex))
                 sys.stderr.write("\n")
             # Some debugging exceptions (TODO: Remove once intial dev work complete)
             except TypeError, ex:
-                sys.stderr.write("TypeError:%s" % ex)
+                sys.stderr.write(str(ex))
                 sys.stderr.write("\n")
 
             # blanket execption catch-all - so we can print an approptiate message
@@ -204,13 +210,10 @@ class Cmdr(object):
         """
         # Check if cmd has actually a Command Class
         if isinstance(cmd, Command):
-
             self.registered_cmds.append(cmd)
             self.complete_dict[cmd.name] = [c for c in cmd.subcmds]
-
         else:
-            sys.stderr.write("expecting a Command object")
-            sys.stderr.write("\n")
+            raise InvalidCommandType("Expecting type cmdr.Command")
 
     def cmd(self, cmd_name, alt=None):
         """A function decorator that registers the function as a command within
@@ -224,16 +227,17 @@ class Cmdr(object):
         *Usage:*
 
         # Instantiate an app
-        app = cmdr.Cmdr(__name__)
+        app = cmdr.Cmdr("TestApp")
 
-        # register a command using the decorator
-        @app.cmd(echo):
+        # register a command using the function decorator
+        @app.cmd('echo'):
         def echo(msg):
             print msg
 
         # start the app
         app.start()
 
+        The command is automatically registered with app using the decorator
         ->echo Hello World!
         Hello World!
 
