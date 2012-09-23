@@ -34,7 +34,7 @@ class Cmdr(object):
     The Cmdr provides two built-in commands; exit and help.
 
     For the commands that are registered, the application will try to provide basic
-    tab completion and maintains a history of previously entered commands for the 
+    tab completion and maintains a history of previously entered commands for the
     current session.
 
     :param app_name: the name of the application
@@ -68,7 +68,7 @@ class Cmdr(object):
 
         # a list used for code completion
         self.current_candidates = []
-        
+
         # flag used to trigger the application to close
         self.exit_condition = False
 
@@ -102,7 +102,7 @@ class Cmdr(object):
         # Show the welcome message up front.
         sys.stdout.write(self.welcome_msg)
         sys.stdout.write("\n")
-       
+
         # make backup of the current completer function
         self.rl_completer = readline.get_completer()
 

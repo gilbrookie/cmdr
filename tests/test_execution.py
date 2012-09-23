@@ -116,7 +116,7 @@ class TestCmdrExit(unittest.TestCase):
         child.sendline("q")
         child.expect(pexpect.EOF)
         res = child.before.lstrip("q")
-        self.assertEqual(res.replace("\r\n", ""), 
+        self.assertEqual(res.replace("\r\n", ""),
                          data.CmdrSimple.exit_msg.replace("\n", ""))
 
     def test_ctrl_c_exit(self):
@@ -125,7 +125,7 @@ class TestCmdrExit(unittest.TestCase):
         child.sendcontrol("c")
         child.expect(pexpect.EOF)
         res = child.before.lstrip("q")
-        self.assertEqual(res.replace("\r\n", ""), 
+        self.assertEqual(res.replace("\r\n", ""),
                          data.CmdrSimple.exit_msg.replace("\n", ""))
         app.terminate()
         del app
@@ -136,7 +136,7 @@ class TestCmdrExit(unittest.TestCase):
         child.sendcontrol("d")
         child.expect(pexpect.EOF)
         res = child.before.lstrip("q")
-        self.assertEqual(res.replace("\r\n", ""), 
+        self.assertEqual(res.replace("\r\n", ""),
                          data.CmdrSimple.exit_msg.replace("\n", ""))
         app.terminate()
         del app
