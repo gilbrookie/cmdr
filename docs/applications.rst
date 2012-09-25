@@ -15,7 +15,7 @@ all it needs is  a set of commands to run (See Registering commands).
     ...
 
 The *name* argument can be any string. This name is used to provide a nice welcome message for you
-when the application is started.  
+when the application is started.
 
 Registering Commands
 --------------------
@@ -38,13 +38,13 @@ Customizing the your App
 
 The following can be modified using the optional paramters in :class:`Cmdr`:
 
-* Welcome Message - The string shown when the application starts. 
+* Welcome Message - The string shown when the application starts.
 * Exit Message - The string shown as the application closes.
-* Prompt - you can change the defautl "->" prompt string. 
+* Prompt - you can change the defautl "->" prompt string.
 
 ::
 
-    c = Cmdr("TestApp", 
+    c = Cmdr("TestApp",
              intro_msg="TestApp - just what you always wanted",
              exit_msg="See ya!"
              prompt="=>")

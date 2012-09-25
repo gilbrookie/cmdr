@@ -12,7 +12,7 @@ Method 1: Using the @cmd decorator - Simple and Easy
 
 ::
 
-    # Using function Decorator 
+    # Using function Decorator
     @app.cmd()
     def echo3(*args):
         """This docstring will appear as help for the echo cmd"""
@@ -56,7 +56,7 @@ better code organization.
 
 Method 3: Creating a Command object with some arguments
 -------------------------------------------------------
-:: 
+::
 
     def echo1(*args):
         print args

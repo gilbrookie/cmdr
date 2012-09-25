@@ -44,7 +44,7 @@ Here is a simple example to get yoru started:
     >hello
     Hello!
     ...
-    
+
 In this example, you have the three main interfaces of cmdr
 
 #. Creating an app (instantiate a :class:`Cmdr` class)
@@ -62,7 +62,7 @@ There are three ways to develop commands for the cmdr application
 
 Method 1: Creating a Command object with some arguments
 -------------------------------------------------------
-:: 
+::
 
     def echo1(*args):
         print args
@@ -87,7 +87,7 @@ Method 3: Using the cmd decorator
 ---------------------------------
 ::
 
-    # Using function Decorator 
+    # Using function Decorator
     @app.cmd
     def echo3(*args):
         """This docstring will appear as help for the echo cmd"""
@@ -99,21 +99,21 @@ Building the CLI application
 
     # Instatiate an Cmdr object, use the module __name__ to set the name of the app
     app = cmdr.Cmdr(__name__)
-    
+
     # Pass in a command that are available
     app.register_cmd(cmd)
     app.register_cmd(Echo2())
-    
+
     # Start the app
     app.start()
 
 A simple example of the app running:
 
 ::
-    
+
     cmdr Command Line Framework
     Let's get started
-    
+
     -> echo1 Test echo1
     echo1 Test echo1
     -> echo2 abc def
@@ -126,10 +126,10 @@ A simple example of the app running:
 
 .. toctree::
    :maxdepth: 2
-    
+
    applications.rst
    commands.rst
-   
+
 
 Indices and tables
 ==================
