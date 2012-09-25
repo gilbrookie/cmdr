@@ -16,5 +16,16 @@ setup(name="cmdr",
       url="http://github.com/jamesgilbrook/cmdr",
       packages=['cmdr'],
       license=open('LICENSE.txt').read()
+      classifiers=(
+       'Development Status :: 4 - Beta',
+        'Environment :: Console',
+        'Intended Audience :: Developers',
+        'Natural Language :: English',
+        'License :: OSI Approved :: ISC License (ISCL)',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.7',
+        'Topic :: Terminals :: Terminal Emulators/X Terminals',
+        'Operating System :: POSIX :: Linux',
       )
 
