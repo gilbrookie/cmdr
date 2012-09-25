@@ -6,7 +6,7 @@ This module sets up the main interface for the public API.
 """
 
 __title__ = "cmdr"
-__version__ = "0.0.6"
+__version__ = "0.1.0"
 __author__ = "James Gilbrook"
 __licence__ = "ISC"
 __copyright__ = "Copyright 2012 James Gilbrook"
