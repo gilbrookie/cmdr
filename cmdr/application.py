@@ -215,11 +215,11 @@ class Cmdr(object):
         else:
             raise InvalidCommandType("Expecting type cmdr.Command")
 
-    def cmd(self, cmd_name, alt=None):
+    def cmd(self, name=None, alt=None):
         """A function decorator that registers the function as a command within
         the application.
 
-        :param cmd_name: the name of the command (it is how the command will appear
+        :param name: the name of the command (it is how the command will appear
                          within the application
         :param alt: an alternate name for the command - usually a shortcut that the
                     application can register.
@@ -244,6 +244,12 @@ class Cmdr(object):
         """
 
         def decorator(f):
+            # If no name is provided, use the decorated function name (lowercase)            
+            if not name:
+                cmd_name = f.func_name.lower()
+            else:
+                cmd_name = name
+
             self.logger.info("Registering new command '%s', func=%s" %
                              (cmd_name, f))
             # If the function does not have a docstring, override the __doc__ to
