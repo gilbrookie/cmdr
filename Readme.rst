@@ -7,17 +7,17 @@ cmdr - A line based command interpreter framework/tool
 
 What is it?
 -----------
-A simple to use API for creating line-based command interpreter applications that include custom commands.  
+A simple to use API for creating line-based command interpreter applications that include custom commands.
 
-**cmdr** is very similar to the `cmd <http://docs.python.org/library/cmd.html>`_ module. 
+**cmdr** is very similar to the `cmd <http://docs.python.org/library/cmd.html>`_ module.
 
 The goal with **cmdr** is flexibility and require as little code as possible to get up and running.
 
 Motivation
 ----------
 I was working on a web application using Flask and I really like how Flask uses decorators to define
-simple views. It was really easy to get something up and running.  
-At the same time I was building a simple cli tool that could access backend of the web application, 
+simple views. It was really easy to get something up and running.
+At the same time I was building a simple cli tool that could access backend of the web application,
 I thought it would be interesting to try and apply a similar design to how I built the command list.
 
 Installing cmdr
@@ -31,7 +31,7 @@ Then use the setup.py file to install it::
 
     python setup.py install
 
-**TODO** 
+**TODO**
 Add to pypi.
 
 Getting Started!
@@ -58,13 +58,13 @@ Here is a simple example to get you started:::
     $ python app.py
 
     Welcome to TestApp - Let's get started
-    
+
     ->hello
     Hello!
     ->exit
     bye!
 
-    
+
 In this example, you have the three main interfaces of cmdr
 
 #. Creating an app (instantiate a *Cmdr* class)
@@ -80,12 +80,10 @@ Additional documentation is included with the source code, and can be built and 
 This will build the documentation as HTML locally and open a web browser to the home
 page.
 
-
 History
 =======
 
 cmdr is still in development and rapidly nearing it's first release.
-
 
 Roadmap/Status
 ==============
