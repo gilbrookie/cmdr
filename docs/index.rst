@@ -50,6 +50,8 @@ In this example, you have the three main interfaces of cmdr
 #. Creating an app (instantiate a :class:`Cmdr` class)
 #. Defining and registering a command with your app
 #. Starting the command interpreter (using :meth:`Cmdr.start()`)
+
+
 Advanced Usage
 ==============
 

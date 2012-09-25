@@ -33,7 +33,7 @@ uninstall:
 		python setup.py develop -u
 
 sphinx-docs:
-		cd docs; make dirhtml
+		cd docs; make html
 		python -m webbrowser -n "file://${PWD}/docs/_build/html/index.html"
 # Generate sphinx documentation
 docs: sphinx-docs

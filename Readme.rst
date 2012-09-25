@@ -7,28 +7,27 @@ cmdr - A line based command interpreter framework/tool
 
 What is it?
 -----------
-A simple to use API for creating command line application with custom commands.  The goal is be
-flexible and require as little code as possible to get up and running.
+A simple to use API for creating line-based command interpreter applications that include custom commands.  
+
+**cmdr** is very similar to the `cmd <http://docs.python.org/library/cmd.html>`_ module. 
+
+The goal with **cmdr** is flexibility and require as little code as possible to get up and running.
 
 Motivation
 ----------
 I was working on a web application using Flask and I really like how Flask uses decorators to define
 simple views. It was really easy to get something up and running.  
-When I wanted to build a cli backend of the web application, I thought it would be
-interesting to try and apply a similar design to how I built the command list.
+At the same time I was building a simple cli tool that could access backend of the web application, 
+I thought it would be interesting to try and apply a similar design to how I built the command list.
 
 Installing cmdr
 ===============
 
-Clone the source to a local directory
-
-::
+Clone the source to a local directory::
 
     git clone https://github.com/jamesgilbrook/cmdr
 
-Then use the setup.py file to install it
-
-::
+Then use the setup.py file to install it::
 
     python setup.py install
 
@@ -38,9 +37,7 @@ Add to pypi.
 Getting Started!
 ================
 
-Here is a simple example to get yoru started:
-
-::
+Here is a simple example to get you started:::
 
     from cmdr import Cmdr
 
@@ -74,9 +71,9 @@ In this example, you have the three main interfaces of cmdr
 #. Defining and registering a command with your app
 #. Starting the command interpreter (using *Cmdr.start()*)
 
-Full Documentation
+Documentation
 ==================
-Full documentation is included with the source code, and can be built and viewed with a simple make command::
+Additional documentation is included with the source code, and can be built and viewed with a simple make command::
 
     make docs
 
@@ -87,7 +84,7 @@ page.
 History
 =======
 
-cmdr is still in development and not quite ready for prime time.
+cmdr is still in development and rapidly nearing it's first release.
 
 
 Roadmap/Status
@@ -125,7 +122,7 @@ Misc project requirements  **IN PROGRESS**
 **Target rev1 version is 0.1. ETA: Oct 2012**
 
 
-Issues/Feature Request
-======================
+Issues/Feature Requests
+=======================
 
-All issues/features are being tracked in github `here <https://github.com/jamesgilbrook/cmdr/issues>`_
+All `issues/features <https://github.com/jamesgilbrook/cmdr/issues>`_ are being tracked in github

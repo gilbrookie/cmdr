@@ -1,3 +1,5 @@
+
+=======================
 Creating an Application
 =======================
 
@@ -20,14 +22,15 @@ Registering Commands
 
 :class:`Cmdr` provides two methods for registering commands with a application.
 
-*Register_cmd(cmd) method*
-*@cmd decorator*
+* *Register_cmd(cmd)* method
+* *@cmd* decorator
 
 Builtin Commands
 -----------------
 All applications come builtin with a help and an exit command.
-*help/?* will print out the available commands and their help strings
-*exit/q* will stop the interpreter from executing and exit.
+
+* *help/?* will print out the available commands and their help strings
+* *exit/q* will stop the interpreter from executing and exit.
 
 
 Customizing the your App
