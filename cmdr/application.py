@@ -244,7 +244,7 @@ class Cmdr(object):
         """
 
         def decorator(f):
-            # If no name is provided, use the decorated function name (lowercase)            
+            # If no name is provided, use the decorated function name (lowercase)
             if not name:
                 cmd_name = f.func_name.lower()
             else:

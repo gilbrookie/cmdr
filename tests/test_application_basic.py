@@ -106,11 +106,26 @@ class TestCmdrCommandRegistration(unittest.TestCase):
 
         app = cmdr.Cmdr(__name__)
 
+        # Test with cmd name provided
         @app.cmd("test")
         def test():
             pass
 
-        self.assertEqual(len(app.registered_cmds), 3)
+        # Test with no cmd name provided
+        @app.cmd()
+        def test2():
+            pass
+
+        # Test with cmd name in mixed case
+        @app.cmd()
+        def TeSt3():
+            pass
+
+        self.assertEqual(len(app.registered_cmds), 5)
+        cmd_names = [c.name for c in app.registered_cmds]
+        self.assertIn("test", cmd_names)
+        self.assertIn("test2", cmd_names)
+        self.assertIn("test3", cmd_names)
 
         del app
 
