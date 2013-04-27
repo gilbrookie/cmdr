@@ -12,5 +12,5 @@ __licence__ = "ISC"
 __copyright__ = "Copyright 2012 James Gilbrook"
 
 # Expose the public api via imports of submodules
-from command import Command, subcmd
-from application import Cmdr
+from .command import Command, subcmd
+from .application import Cmdr

@@ -135,11 +135,11 @@ class Cmdr(object):
                 self.exit_condition = True
 
             # Catch cases where an invalid command was entered
-            except CommandNotFound, ex:
+            except CommandNotFound as ex:
                 sys.stderr.write(str(ex))
                 sys.stderr.write("\n")
             # Some debugging exceptions (TODO: Remove once intial dev work complete)
-            except TypeError, ex:
+            except TypeError as ex:
                 sys.stderr.write(str(ex))
                 sys.stderr.write("\n")
 
@@ -316,7 +316,7 @@ class Cmdr(object):
 
                     self.logger.debug('candidates=%s', self.current_candidates)
 
-                except (KeyError, IndexError), err:
+                except (KeyError, IndexError) as err:
                     self.logger.error('completion error: %s', err)
                     self.current_candidates = []
 
