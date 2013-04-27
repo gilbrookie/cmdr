@@ -5,8 +5,8 @@
 # Install the source files into a staging location (using setup.py develop)
 # And install any dependencies
 init:
-		python setup.py develop
 		pip install -r requirements.txt
+		python setup.py develop
 
 # Cleaup temp and compiled files
 clean:
