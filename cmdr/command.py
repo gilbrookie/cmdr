@@ -9,7 +9,7 @@ functionality required the register commands with the Application and allow
 them to be executed.
 """
 import logging
-
+from cmdr.state import StateController
 
 class CmdMetaclass(type):
     def __new__(cls, name, bases, attrs):
@@ -132,6 +132,11 @@ class Command(object):
 
         self.alt = alt
         self.completion_dict = None
+
+        # Create a StateController, so commands can share state with
+        # the application.  Defaults to None, but is created when cmd
+        # registered with an application
+        self.app_state = None
 
     @property
     def cmd_dict(self):

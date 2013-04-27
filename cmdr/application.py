@@ -12,6 +12,7 @@ import logging
 import sys
 
 from cmdr import Command
+from cmdr.state import StateController
 
 logging.basicConfig(filename='/tmp/cmdr.log', level=logging.DEBUG,
                     format='%(asctime)s [%(levelname)s] %(module)s - %(message)s')
@@ -94,6 +95,9 @@ class Cmdr(object):
         self.exit_msg = self.DEFAULT_EXIT
         if exit_msg:
             self.exit_msg = exit_msg
+    
+        # Create an instance of the StateController
+        self.app_state = StateController("Cmdr")
 
     def start(self):
         """Instructs the Cmdr class to start the command line interreter.  All
@@ -210,6 +214,8 @@ class Cmdr(object):
         """
         # Check if cmd has actually a Command Class
         if isinstance(cmd, Command):
+            # populate the statecontroller for the command 
+            cmd.app_state = StateController(cmd.name)
             self.registered_cmds.append(cmd)
             self.complete_dict[cmd.name] = [c for c in cmd.subcmds]
         else:
