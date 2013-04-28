@@ -99,6 +99,12 @@ class Cmdr(object):
         # Create an instance of the StateController
         self.app_state = StateController("Cmdr")
 
+    def load_colourscheme(scheme):
+        if scheme and isinstance(scheme, ColourScheme):
+            self.app_state["colorscheme"] = scheme
+        else:
+            print("Invalid colourscheme, should be type ColourScheme")
+
     def start(self):
         """Instructs the Cmdr class to start the command line interreter.  All
         commands must be registered with the application prior to calling start."""

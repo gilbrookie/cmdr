@@ -2,3 +2,4 @@ docutils
 nose
 flake8
 pexpect-u
+clint
