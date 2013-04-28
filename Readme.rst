@@ -83,42 +83,7 @@ page.
 History
 =======
 
-cmdr is still in development and rapidly nearing it's first release.
-
-Roadmap/Status
-==============
-
-I am nearing my goal of being feature complete for rev1 release:
-Below are the features that will (need to) make it in (priority order)
-
-Cmdr object:  **COMPLETE**
-
-#. Run primary interpreter loop **Done**
-#. Provide a registration interface for commands **Done**.
-#. Provide tab completion support **Done**
-#. Expose builtin commands for "help" and "exit", implement each builtin. **Done**
-
-Command object:  **COMPLETE**
-
-#. Define (finalize) the data needed by all commands (Cmdr needs these details) **Done**
-#. Define the methods required by all commands **Done**
-#. Allow methods to be used as sub commands **Done**
-#. Helper properties (used by Cmdr for tab completion and easy command lookup) **Done**
-
-Misc project requirements  **IN PROGRESS**
-
-#. Docstrings for all public classes/functions/methods/data **Done**
-#. Passes pep8 and pyflakes **Done**
-#. Must execute on Python 2.6 and python 2.7 **In progress**
-#. Basic level of documentation
-#. Basic level of unittests **Done**
-#. finalize package name  (cmdr has been chosenas package name!) **Done**
-#. need setup.py and Makefile (for basic testing/docs/setup) **Done**
-#. register and publish to pypi
-
-
-**Target rev1 version is 0.1. ETA: Oct 2012**
-
+0.1 - initial release (Oct 2012) 
 
 Issues/Feature Requests
 =======================
