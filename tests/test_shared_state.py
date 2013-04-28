@@ -10,7 +10,7 @@ class TestBasicSharedState(unittest.TestCase):
         self.app.register_cmd(self.cmd)
         self.st = state.StateController("Monitor")
 
-    def testDown(self):
+    def tearDown(self):
         self.app = None # cleanup app and commands 
         self.cmd = None
         self.st = None

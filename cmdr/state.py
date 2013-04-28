@@ -1,4 +1,6 @@
 
+#from __future__ import print_statement
+
 """
 cmdr.state
 ~~~~~~~~~~
@@ -28,10 +30,10 @@ class StateController(object):
     def dump(self):
         """Print out the shared data dictionary (keys and values)"""
         if not _app_state():
-            print "State dict is empty"
+            print("State dict is empty")
         else:
             for k, v in self._app_state.iteritems():
-                print k, v
+                print("%s, %s" % (k, v))
 
     def __getitem__(self, key):
         return self._app_state.get(key)
@@ -40,7 +42,7 @@ class StateController(object):
         try:
             self._app_state[key] = value
         except KeyError:
-            print "Error: Failed to locate key %s" % key
+            print("Error: Failed to locate key %s" % key)
         except Exception as e:
-            print e
+            print(e)
 
