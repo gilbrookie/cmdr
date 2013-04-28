@@ -15,4 +15,5 @@ Misc project requirements  **COMPLETED**
 #. register and publish to pypi
 #. Python3 Support
 #. Incorporate clint style output
+#. Colourschemes for styling output.
 
