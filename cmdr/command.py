@@ -10,12 +10,17 @@ them to be executed.
 """
 import logging
 
+from future.utils import with_metaclass
 
 class CmdMetaclass(type):
     def __new__(cls, name, bases, attrs):
-
         # Create an new super class
-        new_cls = super(CmdMetaclass, cls).__new__(cls, name, bases, attrs)
+        new_attrs = attrs.copy()
+
+        classcell = attrs.pop('__classcell__', None)
+        if classcell is not None:
+            new_attrs['__classcell__'] = classcell
+        new_cls = super(CmdMetaclass, cls).__new__(cls, name, bases, new_attrs)
 
         # a dict to track sub cmds
         subcmds = {}
@@ -39,7 +44,7 @@ class CmdMetaclass(type):
         return new_cls
 
 
-class Command(object):
+class Command(with_metaclass(CmdMetaclass, object)):
     """
     The Command class defines the interface required to be registered with the
     Application class. The command class may be used in a few different ways, but
@@ -82,10 +87,7 @@ class Command(object):
 
     """
 
-    __metaclass__ = CmdMetaclass
-
     def __init__(self, cmd=None, alt=None, description=None, exec_func=None):
-
         self.logger = logging.getLogger(self.__class__.__name__)
 
         # In cases where Commands are created directly (cmdr.cmd generator, or
@@ -182,5 +184,5 @@ def subcmd(f):
     # "is_subcmd" so that the Command class's metaclass can find them and configure
     # the method as sub commands.
 
-    f.is_subcmd = True
+    setattr(f, 'is_subcmd', True)
     return f

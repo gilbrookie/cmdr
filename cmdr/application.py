@@ -6,7 +6,7 @@ cmdr.application
 
 This module implements the main Cmdr class and supported functions.
 """
-
+import builtins
 import readline
 import logging
 import sys
@@ -117,7 +117,7 @@ class Cmdr(object):
 
             try:
                 # read in the text input from cli
-                cmd = raw_input(self.prompt)
+                cmd = input(self.prompt)
 
                 # Check for specific builtin shortcuts
                 if cmd == "?":
@@ -135,11 +135,11 @@ class Cmdr(object):
                 self.exit_condition = True
 
             # Catch cases where an invalid command was entered
-            except CommandNotFound, ex:
+            except CommandNotFound as ex:
                 sys.stderr.write(str(ex))
                 sys.stderr.write("\n")
             # Some debugging exceptions (TODO: Remove once intial dev work complete)
-            except TypeError, ex:
+            except TypeError as ex:
                 sys.stderr.write(str(ex))
                 sys.stderr.write("\n")
 
@@ -185,7 +185,13 @@ class Cmdr(object):
 
                         # if we have a subcmd, we need to get the method from
                         # the instance stored in the command list
-                        ex_fn = getattr(cmd, meth.func_name)
+                        try:
+                            # get the method for @subcmd style methods
+                            ex_fn = getattr(cmd, meth.__name__)
+                        except AttributeError as ar:
+                            # get the function for @app.cmd style functions
+                            ex_fn = meth
+
                         args = key_list
 
                     else:
@@ -211,7 +217,10 @@ class Cmdr(object):
         # Check if cmd has actually a Command Class
         if isinstance(cmd, Command):
             self.registered_cmds.append(cmd)
-            self.complete_dict[cmd.name] = [c for c in cmd.subcmds]
+            if (cmd.subcmds):
+                self.complete_dict[cmd.name] = [c for c in cmd.subcmds]
+            else:
+                self.logger.info('Register_cmd - cmd has no subcmds')
         else:
             raise InvalidCommandType("Expecting type cmdr.Command")
 
@@ -316,7 +325,7 @@ class Cmdr(object):
 
                     self.logger.debug('candidates=%s', self.current_candidates)
 
-                except (KeyError, IndexError), err:
+                except (KeyError, IndexError) as err:
                     self.logger.error('completion error: %s', err)
                     self.current_candidates = []
 
